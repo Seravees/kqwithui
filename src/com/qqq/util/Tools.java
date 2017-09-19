@@ -18,6 +18,7 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.qqq.model.Var;
@@ -188,7 +189,6 @@ public class Tools {
 			cell.setCellStyle(sheet.getRow(startRow - 1).getCell(i)
 					.getCellStyle());
 		}
-
 	}
 
 	public static void create(String path, String fileName, String fileType,
@@ -275,4 +275,23 @@ public class Tools {
 			return null;
 		}
 	}
+
+	public static boolean isMerged(Sheet sheet, int row, int column) {
+		boolean flag = false;
+		int sheetMergeCount = sheet.getNumMergedRegions();
+		for (int i = 0; i < sheetMergeCount; i++) {
+			CellRangeAddress range = sheet.getMergedRegion(i);
+			int firstColumn = range.getFirstColumn();
+			int lastColumn = range.getLastColumn();
+			int firstRow = range.getFirstRow();
+			int lastRow = range.getLastRow();
+			if (row >= firstRow && row <= lastRow) {
+				if (column >= firstColumn && column <= lastColumn) {
+					flag = true;
+				}
+			}
+		}
+		return flag;
+	}
+
 }

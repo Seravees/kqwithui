@@ -817,7 +817,6 @@ public class Dao {
 		}
 	}
 
-	
 	public static void setRowHeight() throws IOException {
 		System.out.println("******setRowHeight******");
 
@@ -892,6 +891,12 @@ public class Dao {
 						sheet.addMergedRegion(new CellRangeAddress(i, i, 0, 4));
 						sheet.addMergedRegion(new CellRangeAddress(i, i, 6, 7));
 						sheet.addMergedRegion(new CellRangeAddress(i, i, 10, 11));
+					}
+				}
+
+				if (cell.toString().contains("备注：")) {
+					if (!Tools.isMerged(sheet, i, 0)) {
+						sheet.addMergedRegion(new CellRangeAddress(i, i, 0, 14));
 					}
 				}
 			}
