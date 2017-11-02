@@ -46,7 +46,6 @@ public class Tools {
 			throws IOException {
 		File file = new File(Var.getOutPath());
 		File[] files = file.listFiles();
-
 		InputStream stream = null;
 
 		for (int i = 0; i < files.length; i++) {

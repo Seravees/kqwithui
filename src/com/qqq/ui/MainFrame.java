@@ -12,13 +12,17 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import com.qqq.data.Dao;
 import com.qqq.model.Var;
 
 public class MainFrame implements ActionListener {
+	JPanel contentPane;
+
 	JButton btn_start;
 	File file_src;
 	File file_persons;
@@ -38,8 +42,21 @@ public class MainFrame implements ActionListener {
 	JTextField jtf_add1, jtf_add2, jtf_add2se;
 	JTextField jtf_outpath;
 
+	ConsoleText showArea;
+
+	JScrollPane scrollPane;
+
 	public MainFrame() {
 		JFrame frame = new JFrame("main");
+
+		showArea = new ConsoleText();
+		showArea.setBounds(40, 470, 700, 70);
+		showArea.setEditable(false);
+
+		scrollPane = new JScrollPane(showArea);
+		scrollPane.setBounds(40, 470, 700, 70);
+		scrollPane
+				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
 		/****** 格式表格选择 ******/
 		JPanel jp_src = new JPanel();
@@ -61,9 +78,11 @@ public class MainFrame implements ActionListener {
 				file_src = jfc.getSelectedFile();
 				if (file_src.isFile()) {
 					jtf_src.setText(file_src.getAbsolutePath());
+					// System.out.println(jtf_src.getText());
 				}
 			}
 		});
+
 		jp_src.add(jl_src);
 		jp_src.add(jtf_src);
 		jp_src.add(jb_src);
@@ -379,7 +398,7 @@ public class MainFrame implements ActionListener {
 		btn_start.setBounds(650, 420, 75, 35);
 		btn_start.addActionListener(this);
 
-		JPanel contentPane = new JPanel();
+		contentPane = new JPanel();
 		contentPane.setLayout(null);
 		contentPane.add(jp_src);
 		contentPane.add(jp_persons);
@@ -394,8 +413,10 @@ public class MainFrame implements ActionListener {
 		contentPane.add(jp_add2se);
 		contentPane.add(jp_outpath);
 		contentPane.add(btn_start);
+
+		contentPane.add(scrollPane);
 		frame.setContentPane(contentPane);
-		frame.setSize(800, 500);
+		frame.setSize(800, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 		frame.setLocationRelativeTo(null);
@@ -406,84 +427,96 @@ public class MainFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == btn_start) {
-			if (!jtf_src.getText().equals("")) {
-				System.out.println(file_src.getAbsolutePath());
-				Var.setSrc(file_src.getAbsolutePath());
-			}
+			new Thread(new Runnable() {
 
-			if (!jtf_persons.getText().equals("")) {
-				System.out.println(file_persons.getAbsolutePath());
-				Var.setName(file_persons.getAbsolutePath());
-			}
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					if (!jtf_src.getText().equals("")) {
+						System.out.println(file_src.getAbsolutePath());
+						Var.setSrc(file_src.getAbsolutePath());
+					}
 
-			if (!jtf_pb1.getText().equals("")) {
-				System.out.println(file_pb1.getAbsolutePath());
-				Var.setPb1(file_pb1.getAbsolutePath());
-			}
+					if (!jtf_persons.getText().equals("")) {
+						System.out.println(file_persons.getAbsolutePath());
+						Var.setName(file_persons.getAbsolutePath());
+					}
 
-			if (!jtf_pb2.getText().equals("")) {
-				System.out.println(file_pb2.getAbsolutePath());
-				Var.setPb2(file_pb2.getAbsolutePath());
-			}
+					if (!jtf_pb1.getText().equals("")) {
+						System.out.println(file_pb1.getAbsolutePath());
+						Var.setPb1(file_pb1.getAbsolutePath());
+					}
 
-			if (!jtf_kq1.getText().equals("")) {
-				System.out.println(file_kq1.getAbsolutePath());
-				Var.setKq1(file_kq1.getAbsolutePath());
-			}
+					if (!jtf_pb2.getText().equals("")) {
+						System.out.println(file_pb2.getAbsolutePath());
+						Var.setPb2(file_pb2.getAbsolutePath());
+					}
 
-			if (!jtf_kq2.getText().equals("")) {
-				System.out.println(file_kq2.getAbsolutePath());
-				Var.setKq2(file_kq2.getAbsolutePath());
-			}
+					if (!jtf_kq1.getText().equals("")) {
+						System.out.println(file_kq1.getAbsolutePath());
+						Var.setKq1(file_kq1.getAbsolutePath());
+					}
 
-			if (!jtf_out.getText().equals("")) {
-				System.out.println(file_out.getAbsolutePath());
-				Var.setOut(file_out.getAbsolutePath());
-			}
+					if (!jtf_kq2.getText().equals("")) {
+						System.out.println(file_kq2.getAbsolutePath());
+						Var.setKq2(file_kq2.getAbsolutePath());
+					}
 
-			if (!jtf_hol.getText().equals("")) {
-				System.out.println(file_holiday.getAbsolutePath());
-				Var.setHoliday(file_holiday.getAbsolutePath());
-			}
+					if (!jtf_out.getText().equals("")) {
+						System.out.println(file_out.getAbsolutePath());
+						Var.setOut(file_out.getAbsolutePath());
+					}
 
-			if (!jtf_add1.getText().equals("")) {
-				System.out.println(file_add1.getAbsolutePath());
-				Var.setAdd1(file_add1.getAbsolutePath());
-			}
+					if (!jtf_hol.getText().equals("")) {
+						System.out.println(file_holiday.getAbsolutePath());
+						Var.setHoliday(file_holiday.getAbsolutePath());
+					}
 
-			if (!jtf_add2.getText().equals("")) {
-				System.out.println(file_add2.getAbsolutePath());
-				Var.setAdd2(file_add2.getAbsolutePath());
-			}
+					if (!jtf_add1.getText().equals("")) {
+						System.out.println(file_add1.getAbsolutePath());
+						Var.setAdd1(file_add1.getAbsolutePath());
+					}
 
-			if (!jtf_add2se.getText().equals("")) {
-				System.out.println(file_add2se.getAbsolutePath());
-				Var.setAdd2se(file_add2se.getAbsolutePath());
-			}
+					if (!jtf_add2.getText().equals("")) {
+						System.out.println(file_add2.getAbsolutePath());
+						Var.setAdd2(file_add2.getAbsolutePath());
+					}
 
-			if (!jtf_outpath.getText().equals("")) {
-				System.out.println(file_outpath.getAbsolutePath());
-				Var.setOutPath(file_outpath.getAbsolutePath());
-			}
+					if (!jtf_add2se.getText().equals("")) {
+						System.out.println(file_add2se.getAbsolutePath());
+						Var.setAdd2se(file_add2se.getAbsolutePath());
+					}
 
-			try {
-				Dao.createPerson();
-				Dao.setPB();
-				Dao.setKQ();
-				Dao.setOut();
-				Dao.setHoliday();
-				Dao.setAdd();
-				Dao.fixPB();
-				Dao.setRowHeight();
-				Dao.merge();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (ParseException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+					if (!jtf_outpath.getText().equals("")) {
+						System.out.println(file_outpath.getAbsolutePath());
+						Var.setOutPath(file_outpath.getAbsolutePath());
+					}
 
+					try {
+						Dao.createPerson();
+						Dao.setPB();
+						Dao.setKQ();
+						Dao.setOut();
+						Dao.setHoliday();
+						Dao.setAdd();
+						Dao.fixPB();
+						Dao.setRowHeight();
+						Dao.merge();
+
+						new JOptionPane();
+						JOptionPane.showMessageDialog(null, "完成", "完成",
+								JOptionPane.INFORMATION_MESSAGE);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (ParseException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+
+				}
+
+			}).start();
 		}
 	}
 }
