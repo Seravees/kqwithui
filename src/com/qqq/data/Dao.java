@@ -98,37 +98,38 @@ public class Dao {
 				pbs.add(pb);
 			}
 		}
-
-		int temp2 = pb2s.size();
-		String dateEnd = new SimpleDateFormat("MM-dd")
-				.format(new SimpleDateFormat("MM.dd").parse(Var.getPb2().split(
-						"-")[1].substring(0,
-						Var.getPb2().split("-")[1].lastIndexOf("."))));
-		for (int i = 3; i < pb2s.get(0).size(); i++) {
-			if (pb2s.get(0).get(i).toString().substring(0, 5).equals(dateEnd)) {
-				temp2 = i + 1;
-			}
-		}
-
-		for (int i = 1; i < pb2s.size(); i++) {
-			int tempend = temp2 < pb2s.get(i).size() ? temp2 : pb2s.get(i)
-					.size();
-			for (int j = 3; j < tempend; j++) {
-				PB pb = new PB();
-				pb.setDate(pb2s.get(0).get(j).toString().substring(0, 5));
-				pb.setWeekday(pb2s.get(0).get(j).toString().substring(6, 9));
-				pb.setDepartment(pb2s.get(i).get(0).toString());
-				pb.setName(pb2s.get(i).get(2).toString());
-				String tempPb = pb2s.get(i).get(j).toString();
-				if (tempPb.length() > 0) {
-					pb.setPb(tempPb.substring(0, tempPb.length() - 1));
-				} else {
-					pb.setPb(tempPb);
+		if (pb2s != null) {
+			int temp2 = pb2s.size();
+			String dateEnd = new SimpleDateFormat("MM-dd")
+					.format(new SimpleDateFormat("MM.dd").parse(Var.getPb2()
+							.split("-")[1].substring(0,
+							Var.getPb2().split("-")[1].lastIndexOf("."))));
+			for (int i = 3; i < pb2s.get(0).size(); i++) {
+				if (pb2s.get(0).get(i).toString().substring(0, 5)
+						.equals(dateEnd)) {
+					temp2 = i + 1;
 				}
-				pbs.add(pb);
+			}
+
+			for (int i = 1; i < pb2s.size(); i++) {
+				int tempend = temp2 < pb2s.get(i).size() ? temp2 : pb2s.get(i)
+						.size();
+				for (int j = 3; j < tempend; j++) {
+					PB pb = new PB();
+					pb.setDate(pb2s.get(0).get(j).toString().substring(0, 5));
+					pb.setWeekday(pb2s.get(0).get(j).toString().substring(6, 9));
+					pb.setDepartment(pb2s.get(i).get(0).toString());
+					pb.setName(pb2s.get(i).get(2).toString());
+					String tempPb = pb2s.get(i).get(j).toString();
+					if (tempPb.length() > 0) {
+						pb.setPb(tempPb.substring(0, tempPb.length() - 1));
+					} else {
+						pb.setPb(tempPb);
+					}
+					pbs.add(pb);
+				}
 			}
 		}
-
 		pbPersons = new ArrayList<PBPerson>();
 
 		for (PB pb : pbs) {
@@ -220,7 +221,7 @@ public class Dao {
 		List<List<Object>> kq2s = Tools.readAll(Var.getKq2());
 
 		List<KQ> kqs = new ArrayList<KQ>();
-
+		System.out.println("flag");
 		for (int i = 2; i < kq1s.size(); i++) {
 			for (int j = 1; j < kq1s.get(i).size() / 2; j++) {
 				KQ kq = new KQ();
@@ -244,31 +245,34 @@ public class Dao {
 				kqs.add(kq);
 			}
 		}
+		if (kq2s != null) {
+			for (int i = 2; i < kq2s.size(); i++) {
+				for (int j = 1; j < kq2s.get(i).size() / 2; j++) {
+					KQ kq = new KQ();
+					kq.setDate(kq2s.get(0).get(j * 2).toString()
+							.substring(0, 5));
+					kq.setWeekday(kq2s.get(0).get(j * 2).toString()
+							.substring(6, 9));
+					kq.setDepartment(kq2s.get(i).get(0).toString());
+					kq.setName(kq2s.get(i).get(1).toString());
+					String tempStart = kq2s.get(i).get(j * 2).toString();
+					if (tempStart.length() > 0) {
+						kq.setStart(tempStart.substring(0,
+								tempStart.length() - 1));
+					} else {
+						kq.setStart(tempStart);
+					}
+					String tempEnd = kq2s.get(i).get(j * 2 + 1).toString();
+					if (tempEnd.length() > 0) {
+						kq.setEnd(tempEnd.substring(0, tempEnd.length() - 1));
+					} else {
+						kq.setEnd(tempEnd);
 
-		for (int i = 2; i < kq2s.size(); i++) {
-			for (int j = 1; j < kq2s.get(i).size() / 2; j++) {
-				KQ kq = new KQ();
-				kq.setDate(kq2s.get(0).get(j * 2).toString().substring(0, 5));
-				kq.setWeekday(kq2s.get(0).get(j * 2).toString().substring(6, 9));
-				kq.setDepartment(kq2s.get(i).get(0).toString());
-				kq.setName(kq2s.get(i).get(1).toString());
-				String tempStart = kq2s.get(i).get(j * 2).toString();
-				if (tempStart.length() > 0) {
-					kq.setStart(tempStart.substring(0, tempStart.length() - 1));
-				} else {
-					kq.setStart(tempStart);
+					}
+					kqs.add(kq);
 				}
-				String tempEnd = kq2s.get(i).get(j * 2 + 1).toString();
-				if (tempEnd.length() > 0) {
-					kq.setEnd(tempEnd.substring(0, tempEnd.length() - 1));
-				} else {
-					kq.setEnd(tempEnd);
-
-				}
-				kqs.add(kq);
 			}
 		}
-
 		kqPersons = new ArrayList<KQPerson>();
 
 		for (KQ kq : kqs) {
@@ -334,7 +338,9 @@ public class Dao {
 		List<List<Object>> outs = Tools.readAll(Var.getOut());
 
 		List<Out> outList = new ArrayList<Out>();
-
+		if (outs == null) {
+			return;
+		}
 		for (int i = 3; i < outs.size(); i++) {
 			Out out = new Out();
 			out.setDate(((String) outs.get(i).get(4)).substring(5));
@@ -451,7 +457,9 @@ public class Dao {
 		List<List<Object>> holidays = Tools.readAll(Var.getHoliday());
 
 		List<Holiday> hols = new ArrayList<Holiday>();
-
+		if (holidays == null) {
+			return;
+		}
 		for (int i = 3; i < holidays.size(); i++) {
 			Holiday hol = new Holiday();
 			hol.setDate(((String) holidays.get(i).get(3)).substring(5, 10));
@@ -617,64 +625,69 @@ public class Dao {
 
 		List<Add> adds = new ArrayList<Add>();
 
-		for (int i = 3; i < add2s.size(); i++) {
-			Add add = new Add();
-			add.setDate(((String) add2s.get(i).get(4)).substring(5, 10));
-			add.setDepartment((String) add2s.get(i).get(2));
-			add.setName((String) add2s.get(i).get(1));
-			add.setStart(((String) add2s.get(i).get(4)).substring(5));
-			add.setEnd(((String) add2s.get(i).get(5)).substring(5));
-			add.setSite((String) add2s.get(i).get(7));
-			add.setApply("是");
-			double hours = (Double) add2s.get(i).get(6) * 24;
-			BigDecimal b = new BigDecimal(hours);
-			add.setHours(b.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue());
+		if (add2s != null) {
+			for (int i = 3; i < add2s.size(); i++) {
+				Add add = new Add();
+				add.setDate(((String) add2s.get(i).get(4)).substring(5, 10));
+				add.setDepartment((String) add2s.get(i).get(2));
+				add.setName((String) add2s.get(i).get(1));
+				add.setStart(((String) add2s.get(i).get(4)).substring(5));
+				add.setEnd(((String) add2s.get(i).get(5)).substring(5));
+				add.setSite((String) add2s.get(i).get(7));
+				add.setApply("是");
+				double hours = (Double) add2s.get(i).get(6) * 24;
+				BigDecimal b = new BigDecimal(hours);
+				add.setHours(b.setScale(1, BigDecimal.ROUND_HALF_UP)
+						.doubleValue());
 
-			adds.add(add);
-		}
+				adds.add(add);
+			}
 
-		if (add2ses != null) {
-			for (int i = 3; i < add2ses.size(); i++) {
-				for (int j = 0; j < adds.size(); j++) {
-					if (adds.get(j).getName()
-							.equals((String) add2ses.get(i).get(1))
-							&& adds.get(j).getDepartment()
-									.equals((String) add2ses.get(i).get(2))
-							&& adds.get(j)
-									.getStart()
-									.equals(((String) add2ses.get(i).get(4))
-											.substring(5))
-							&& adds.get(j)
-									.getEnd()
-									.equals(((String) add2ses.get(i).get(5))
-											.substring(5))) {
-						adds.get(j).setApply("否");
-						break;
+			if (add2ses != null) {
+				for (int i = 3; i < add2ses.size(); i++) {
+					for (int j = 0; j < adds.size(); j++) {
+						if (adds.get(j).getName()
+								.equals((String) add2ses.get(i).get(1))
+								&& adds.get(j).getDepartment()
+										.equals((String) add2ses.get(i).get(2))
+								&& adds.get(j)
+										.getStart()
+										.equals(((String) add2ses.get(i).get(4))
+												.substring(5))
+								&& adds.get(j)
+										.getEnd()
+										.equals(((String) add2ses.get(i).get(5))
+												.substring(5))) {
+							adds.get(j).setApply("否");
+							break;
+						}
 					}
 				}
 			}
 		}
 
-		for (int i = 3; i < add1s.size(); i++) {
-			Add add = new Add();
-			add.setDate(((String) add1s.get(i).get(3)).substring(5, 10));
-			add.setDepartment((String) add1s.get(i).get(2));
-			add.setName((String) add1s.get(i).get(1));
-			add.setStart(((String) add1s.get(i).get(3)).substring(5));
-			add.setEnd(((String) add1s.get(i).get(4)).substring(5));
-			add.setSite((String) add1s.get(i).get(7));
-			add.setApply("是");
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-			Date start = sdf.parse((String) add1s.get(i).get(3));
-			Date end = sdf.parse((String) add1s.get(i).get(4));
-			long diff = end.getTime() - start.getTime();
-			double hours = (double) diff / 60 / 60 / 1000;
-			BigDecimal b = new BigDecimal(hours);
-			add.setHours(b.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue());
+		if (add1s != null) {
+			for (int i = 3; i < add1s.size(); i++) {
+				Add add = new Add();
+				add.setDate(((String) add1s.get(i).get(3)).substring(5, 10));
+				add.setDepartment((String) add1s.get(i).get(2));
+				add.setName((String) add1s.get(i).get(1));
+				add.setStart(((String) add1s.get(i).get(3)).substring(5));
+				add.setEnd(((String) add1s.get(i).get(4)).substring(5));
+				add.setSite((String) add1s.get(i).get(7));
+				add.setApply("是");
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				Date start = sdf.parse((String) add1s.get(i).get(3));
+				Date end = sdf.parse((String) add1s.get(i).get(4));
+				long diff = end.getTime() - start.getTime();
+				double hours = (double) diff / 60 / 60 / 1000;
+				BigDecimal b = new BigDecimal(hours);
+				add.setHours(b.setScale(1, BigDecimal.ROUND_HALF_UP)
+						.doubleValue());
 
-			adds.add(add);
+				adds.add(add);
+			}
 		}
-
 		addPersons = new ArrayList<AddPerson>();
 
 		for (Add add : adds) {

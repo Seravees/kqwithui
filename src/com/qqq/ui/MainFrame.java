@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import com.qqq.data.Dao;
@@ -42,14 +43,16 @@ public class MainFrame implements ActionListener {
 	JTextField jtf_add1, jtf_add2, jtf_add2se;
 	JTextField jtf_outpath;
 
-	ConsoleText showArea;
+	// ConsoleText showArea;
+	JTextArea showArea;
 
 	JScrollPane scrollPane;
 
 	public MainFrame() {
 		JFrame frame = new JFrame("main");
 
-		showArea = new ConsoleText();
+		// showArea = new ConsoleText();
+		showArea = new JTextArea();
 		showArea.setBounds(40, 470, 700, 70);
 		showArea.setEditable(false);
 
@@ -432,6 +435,8 @@ public class MainFrame implements ActionListener {
 				@Override
 				public void run() {
 					// TODO Auto-generated method stub
+					showArea.setText("");
+
 					if (!jtf_src.getText().equals("")) {
 						System.out.println(file_src.getAbsolutePath());
 						Var.setSrc(file_src.getAbsolutePath());
@@ -450,6 +455,8 @@ public class MainFrame implements ActionListener {
 					if (!jtf_pb2.getText().equals("")) {
 						System.out.println(file_pb2.getAbsolutePath());
 						Var.setPb2(file_pb2.getAbsolutePath());
+					} else {
+						Var.setPb2("");
 					}
 
 					if (!jtf_kq1.getText().equals("")) {
@@ -460,31 +467,43 @@ public class MainFrame implements ActionListener {
 					if (!jtf_kq2.getText().equals("")) {
 						System.out.println(file_kq2.getAbsolutePath());
 						Var.setKq2(file_kq2.getAbsolutePath());
+					} else {
+						Var.setKq2("");
 					}
 
 					if (!jtf_out.getText().equals("")) {
 						System.out.println(file_out.getAbsolutePath());
 						Var.setOut(file_out.getAbsolutePath());
+					} else {
+						Var.setOut("");
 					}
 
 					if (!jtf_hol.getText().equals("")) {
 						System.out.println(file_holiday.getAbsolutePath());
 						Var.setHoliday(file_holiday.getAbsolutePath());
+					} else {
+						Var.setHoliday("");
 					}
 
 					if (!jtf_add1.getText().equals("")) {
 						System.out.println(file_add1.getAbsolutePath());
 						Var.setAdd1(file_add1.getAbsolutePath());
+					} else {
+						Var.setAdd1("");
 					}
 
 					if (!jtf_add2.getText().equals("")) {
 						System.out.println(file_add2.getAbsolutePath());
 						Var.setAdd2(file_add2.getAbsolutePath());
+					} else {
+						Var.setAdd2("");
 					}
 
 					if (!jtf_add2se.getText().equals("")) {
 						System.out.println(file_add2se.getAbsolutePath());
 						Var.setAdd2se(file_add2se.getAbsolutePath());
+					} else {
+						Var.setAdd2se("");
 					}
 
 					if (!jtf_outpath.getText().equals("")) {
