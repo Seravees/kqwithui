@@ -221,7 +221,7 @@ public class Dao {
 		List<List<Object>> kq2s = Tools.readAll(Var.getKq2());
 
 		List<KQ> kqs = new ArrayList<KQ>();
-		System.out.println("flag");
+
 		for (int i = 2; i < kq1s.size(); i++) {
 			for (int j = 1; j < kq1s.get(i).size() / 2; j++) {
 				KQ kq = new KQ();
@@ -245,6 +245,7 @@ public class Dao {
 				kqs.add(kq);
 			}
 		}
+
 		if (kq2s != null) {
 			for (int i = 2; i < kq2s.size(); i++) {
 				for (int j = 1; j < kq2s.get(i).size() / 2; j++) {
