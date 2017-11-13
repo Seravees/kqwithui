@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -15,7 +16,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileSystemView;
 
@@ -44,16 +44,21 @@ public class MainFrame implements ActionListener {
 	JTextField jtf_add1, jtf_add2, jtf_add2se;
 	JTextField jtf_outpath;
 
-	// ConsoleText showArea;
-	JTextArea showArea;
+	ConsoleText showArea;
+	// JTextArea showArea;
 
 	JScrollPane scrollPane;
+
+	JFileChooser jfc1;
 
 	public MainFrame() {
 		JFrame frame = new JFrame("main");
 
-		// showArea = new ConsoleText();
-		showArea = new JTextArea();
+		jfc1 = new JFileChooser();
+		jfc1.setCurrentDirectory(jfc1.getSelectedFile());
+
+		showArea = new ConsoleText();
+		// showArea = new JTextArea();
 		showArea.setBounds(40, 470, 700, 70);
 		showArea.setEditable(false);
 
@@ -76,18 +81,18 @@ public class MainFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				JFileChooser jfc = new JFileChooser(FileSystemView
-						.getFileSystemView().getHomeDirectory());
-				jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-				int value = jfc.showDialog(new JLabel(), "选择源表格");
+				// JFileChooser jfc = new JFileChooser(FileSystemView
+				// .getFileSystemView().getHomeDirectory());
+				jfc1.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				int value = jfc1.showDialog(new JLabel(), "选择源表格");
 				if (value == JFileChooser.APPROVE_OPTION) {
-					file_src = jfc.getSelectedFile();
+					file_src = jfc1.getSelectedFile();
 					if (file_src.isFile()) {
 						jtf_src.setText(file_src.getAbsolutePath());
 						// System.out.println(jtf_src.getText());
 					}
 				} else {
-
+					jtf_persons.setText("");
 				}
 			}
 		});
@@ -110,17 +115,17 @@ public class MainFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				JFileChooser jfc = new JFileChooser(FileSystemView
-						.getFileSystemView().getHomeDirectory());
-				jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-				int value = jfc.showDialog(new JLabel(), "选择人员名单");
+				// JFileChooser jfc = new JFileChooser(FileSystemView
+				// .getFileSystemView().getHomeDirectory());
+				jfc1.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				int value = jfc1.showDialog(new JLabel(), "选择人员名单");
 				if (value == JFileChooser.APPROVE_OPTION) {
-					file_persons = jfc.getSelectedFile();
+					file_persons = jfc1.getSelectedFile();
 					if (file_persons.isFile()) {
 						jtf_persons.setText(file_persons.getAbsolutePath());
 					}
 				} else {
-
+					jtf_persons.setText("");
 				}
 			}
 		});
@@ -142,17 +147,17 @@ public class MainFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				JFileChooser jfc = new JFileChooser(FileSystemView
-						.getFileSystemView().getHomeDirectory());
-				jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-				int value = jfc.showDialog(new JLabel(), "选择排班1");
+				// JFileChooser jfc = new JFileChooser(FileSystemView
+				// .getFileSystemView().getHomeDirectory());
+				jfc1.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				int value = jfc1.showDialog(new JLabel(), "选择排班1");
 				if (value == JFileChooser.APPROVE_OPTION) {
-					file_pb1 = jfc.getSelectedFile();
+					file_pb1 = jfc1.getSelectedFile();
 					if (file_pb1.isFile()) {
 						jtf_pb1.setText(file_pb1.getAbsolutePath());
 					}
 				} else {
-
+					jtf_persons.setText("");
 				}
 			}
 		});
@@ -174,17 +179,17 @@ public class MainFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				JFileChooser jfc = new JFileChooser(FileSystemView
-						.getFileSystemView().getHomeDirectory());
-				jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-				int value = jfc.showDialog(new JLabel(), "选择排班2");
+				// JFileChooser jfc = new JFileChooser(FileSystemView
+				// .getFileSystemView().getHomeDirectory());
+				jfc1.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				int value = jfc1.showDialog(new JLabel(), "选择排班2");
 				if (value == JFileChooser.APPROVE_OPTION) {
-					file_pb2 = jfc.getSelectedFile();
+					file_pb2 = jfc1.getSelectedFile();
 					if (file_pb2.isFile()) {
 						jtf_pb2.setText(file_pb2.getAbsolutePath());
 					}
 				} else {
-
+					jtf_persons.setText("");
 				}
 			}
 		});
@@ -206,17 +211,17 @@ public class MainFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				JFileChooser jfc = new JFileChooser(FileSystemView
-						.getFileSystemView().getHomeDirectory());
-				jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-				int value = jfc.showDialog(new JLabel(), "选择考勤1");
+				// JFileChooser jfc = new JFileChooser(FileSystemView
+				// .getFileSystemView().getHomeDirectory());
+				jfc1.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				int value = jfc1.showDialog(new JLabel(), "选择考勤1");
 				if (value == JFileChooser.APPROVE_OPTION) {
-					file_kq1 = jfc.getSelectedFile();
+					file_kq1 = jfc1.getSelectedFile();
 					if (file_kq1.isFile()) {
 						jtf_kq1.setText(file_kq1.getAbsolutePath());
 					}
 				} else {
-
+					jtf_persons.setText("");
 				}
 			}
 		});
@@ -238,17 +243,17 @@ public class MainFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				JFileChooser jfc = new JFileChooser(FileSystemView
-						.getFileSystemView().getHomeDirectory());
-				jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-				int value = jfc.showDialog(new JLabel(), "选择考勤2");
+				// JFileChooser jfc = new JFileChooser(FileSystemView
+				// .getFileSystemView().getHomeDirectory());
+				jfc1.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				int value = jfc1.showDialog(new JLabel(), "选择考勤2");
 				if (value == JFileChooser.APPROVE_OPTION) {
-					file_kq2 = jfc.getSelectedFile();
+					file_kq2 = jfc1.getSelectedFile();
 					if (file_kq2.isFile()) {
 						jtf_kq2.setText(file_kq2.getAbsolutePath());
 					}
 				} else {
-
+					jtf_persons.setText("");
 				}
 			}
 		});
@@ -270,17 +275,17 @@ public class MainFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				JFileChooser jfc = new JFileChooser(FileSystemView
-						.getFileSystemView().getHomeDirectory());
-				jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-				int value = jfc.showDialog(new JLabel(), "选择外出");
+				// JFileChooser jfc = new JFileChooser(FileSystemView
+				// .getFileSystemView().getHomeDirectory());
+				jfc1.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				int value = jfc1.showDialog(new JLabel(), "选择外出");
 				if (value == JFileChooser.APPROVE_OPTION) {
-					file_out = jfc.getSelectedFile();
+					file_out = jfc1.getSelectedFile();
 					if (file_out.isFile()) {
 						jtf_out.setText(file_out.getAbsolutePath());
 					}
 				} else {
-
+					jtf_persons.setText("");
 				}
 			}
 		});
@@ -302,17 +307,17 @@ public class MainFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				JFileChooser jfc = new JFileChooser(FileSystemView
-						.getFileSystemView().getHomeDirectory());
-				jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-				int value = jfc.showDialog(new JLabel(), "选择请假");
+				// JFileChooser jfc = new JFileChooser(FileSystemView
+				// .getFileSystemView().getHomeDirectory());
+				jfc1.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				int value = jfc1.showDialog(new JLabel(), "选择请假");
 				if (value == JFileChooser.APPROVE_OPTION) {
-					file_holiday = jfc.getSelectedFile();
+					file_holiday = jfc1.getSelectedFile();
 					if (file_holiday.isFile()) {
 						jtf_hol.setText(file_holiday.getAbsolutePath());
 					}
 				} else {
-
+					jtf_persons.setText("");
 				}
 			}
 		});
@@ -334,17 +339,17 @@ public class MainFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				JFileChooser jfc = new JFileChooser(FileSystemView
-						.getFileSystemView().getHomeDirectory());
-				jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-				int value = jfc.showDialog(new JLabel(), "选择统筹加班");
+				// JFileChooser jfc = new JFileChooser(FileSystemView
+				// .getFileSystemView().getHomeDirectory());
+				jfc1.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				int value = jfc1.showDialog(new JLabel(), "选择统筹加班");
 				if (value == JFileChooser.APPROVE_OPTION) {
-					file_add1 = jfc.getSelectedFile();
+					file_add1 = jfc1.getSelectedFile();
 					if (file_add1.isFile()) {
 						jtf_add1.setText(file_add1.getAbsolutePath());
 					}
 				} else {
-
+					jtf_persons.setText("");
 				}
 			}
 		});
@@ -366,17 +371,17 @@ public class MainFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				JFileChooser jfc = new JFileChooser(FileSystemView
-						.getFileSystemView().getHomeDirectory());
-				jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-				int value = jfc.showDialog(new JLabel(), "选择临时加班（全部）");
+				// JFileChooser jfc = new JFileChooser(FileSystemView
+				// .getFileSystemView().getHomeDirectory());
+				jfc1.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				int value = jfc1.showDialog(new JLabel(), "选择临时加班（全部）");
 				if (value == JFileChooser.APPROVE_OPTION) {
-					file_add2 = jfc.getSelectedFile();
+					file_add2 = jfc1.getSelectedFile();
 					if (file_add2.isFile()) {
 						jtf_add2.setText(file_add2.getAbsolutePath());
 					}
 				} else {
-
+					jtf_persons.setText("");
 				}
 			}
 		});
@@ -398,17 +403,17 @@ public class MainFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				JFileChooser jfc = new JFileChooser(FileSystemView
-						.getFileSystemView().getHomeDirectory());
-				jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-				int value = jfc.showDialog(new JLabel(), "选择临时加班（未完成）");
+				// JFileChooser jfc = new JFileChooser(FileSystemView
+				// .getFileSystemView().getHomeDirectory());
+				jfc1.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				int value = jfc1.showDialog(new JLabel(), "选择临时加班（未完成）");
 				if (value == JFileChooser.APPROVE_OPTION) {
-					file_add2se = jfc.getSelectedFile();
+					file_add2se = jfc1.getSelectedFile();
 					if (file_add2se.isFile()) {
 						jtf_add2se.setText(file_add2se.getAbsolutePath());
 					}
 				} else {
-
+					jtf_persons.setText("");
 				}
 			}
 		});
@@ -440,7 +445,7 @@ public class MainFrame implements ActionListener {
 						jtf_outpath.setText(file_outpath.getAbsolutePath());
 					}
 				} else {
-
+					jtf_persons.setText("");
 				}
 			}
 		});
@@ -486,6 +491,7 @@ public class MainFrame implements ActionListener {
 				@Override
 				public void run() {
 					// TODO Auto-generated method stub
+					Date start = new Date();
 					showArea.setText("");
 
 					if (!jtf_src.getText().equals("")) {
@@ -576,6 +582,9 @@ public class MainFrame implements ActionListener {
 						new JOptionPane();
 						JOptionPane.showMessageDialog(null, "完成", "完成",
 								JOptionPane.INFORMATION_MESSAGE);
+						Date end = new Date();
+						System.out.println((end.getTime() - start.getTime())
+								+ "ms");
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
