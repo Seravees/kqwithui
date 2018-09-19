@@ -12,10 +12,13 @@ public class Var {
 	static String pb2;
 	static String kq1;
 	static String kq2;
+	static String pbkq;
 	static String holiday;
 	static String add1;
 	static String add2;
 	static String add2se;
+	static String add;
+	static String addse;
 	static String out;
 
 	public static String getInPath() {
@@ -120,6 +123,30 @@ public class Var {
 
 	public static void setOut(String out) {
 		Var.out = out;
+	}
+
+	public static String getPbkq() {
+		return pbkq;
+	}
+
+	public static void setPbkq(String pbkq) {
+		Var.pbkq = pbkq;
+	}
+
+	public static String getAdd() {
+		return add;
+	}
+
+	public static void setAdd(String add) {
+		Var.add = add;
+	}
+
+	public static String getAddse() {
+		return addse;
+	}
+
+	public static void setAddse(String addse) {
+		Var.addse = addse;
 	}
 
 }
