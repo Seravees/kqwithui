@@ -64,6 +64,17 @@ public class Dao {
 		}
 	}
 
+	public static void setPBKQ() throws IOException {
+		System.out.println("******setPBKQ******");
+
+		List<List<Object>> pbs = Tools.readAll(Var.getPbkq());
+		for (List<Object> t : pbs) {
+			for (Object tt : t) {
+				System.out.println(tt.toString());
+			}
+		}
+	}
+
 	public static void setPB() throws IOException, ParseException {
 		System.out.println("******setPB******");
 

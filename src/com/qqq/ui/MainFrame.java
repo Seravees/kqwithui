@@ -634,6 +634,7 @@ public class MainFrame implements ActionListener {
 
 					if (!jtf_pbkq.getText().equals("")) {
 						System.out.println(file_pbkq.getAbsolutePath());
+						Var.setPbkq(file_pbkq.getAbsolutePath());
 					} else {
 						Var.setPbkq("");
 					}
@@ -691,15 +692,16 @@ public class MainFrame implements ActionListener {
 					}
 
 					try {
-						Dao.createPerson();
+						// Dao.createPerson();
+						Dao.setPBKQ();
 						// Dao.setPB();
 						// Dao.setKQ();
-						Dao.setOut();
-						Dao.setHoliday();
+						// Dao.setOut();
+						// Dao.setHoliday();
 						// Dao.setAdd();
-						Dao.fixPB();
-						Dao.setRowHeight();
-						Dao.merge();
+						// Dao.fixPB();
+						// Dao.setRowHeight();
+						// Dao.merge();
 
 						new JOptionPane();
 						JOptionPane.showMessageDialog(null, "完成", "完成",
@@ -708,9 +710,6 @@ public class MainFrame implements ActionListener {
 						System.out.println((end.getTime() - start.getTime())
 								+ "ms");
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (ParseException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
