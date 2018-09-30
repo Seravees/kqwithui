@@ -3,8 +3,33 @@ package com.qqq.model;
 public class Out {
 	String name;
 	String department;
-	String date;
-	int time;
+	String start;
+	String end;
+	String state;
+
+	public String getStart() {
+		return start;
+	}
+
+	public void setStart(String start) {
+		this.start = start;
+	}
+
+	public String getEnd() {
+		return end;
+	}
+
+	public void setEnd(String end) {
+		this.end = end;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
 
 	public String getName() {
 		return name;
@@ -22,26 +47,10 @@ public class Out {
 		this.department = department;
 	}
 
-	public String getDate() {
-		return date;
-	}
-
-	public void setDate(String date) {
-		this.date = date;
-	}
-
-	public int getTime() {
-		return time;
-	}
-
-	public void setTime(int time) {
-		this.time = time;
-	}
-
 	@Override
 	public String toString() {
-		return "Out [name=" + name + ", department=" + department + ", date="
-				+ date + ", time=" + time + "]";
+		return "Out [name=" + name + ", department=" + department + ", start="
+				+ start + ", end=" + end + ", state=" + state + "]";
 	}
 
 }

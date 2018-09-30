@@ -51,10 +51,16 @@ public class Tools {
 		for (int i = 0; i < files.length; i++) {
 			if (files[i].getName().equals(fileName + "." + fileType)) {
 				stream = new FileInputStream(files[i]);
+				break;
 			} else if (files[i].getName().contains(
 					fileName.split("-")[1] + "." + fileType)) {
 				stream = new FileInputStream(files[i]);
+				break;
 			}
+			if (i == files.length - 1) {
+				return null;
+			}
+
 		}
 
 		Workbook wb = null;
@@ -253,7 +259,9 @@ public class Tools {
 						switch (cell.getCellType()) {
 						case HSSFCell.CELL_TYPE_STRING:
 							temp.add(cell.getStringCellValue());
-							// System.out.println(cell.getStringCellValue());
+							
+//							 System.out.println(cell.getCellType()
+//							 + cell.getStringCellValue()+cell.getCellType());
 							break;
 						case HSSFCell.CELL_TYPE_NUMERIC:
 							temp.add(cell.getNumericCellValue());

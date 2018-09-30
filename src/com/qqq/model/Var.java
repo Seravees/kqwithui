@@ -20,6 +20,15 @@ public class Var {
 	static String add;
 	static String addse;
 	static String out;
+	static String bd;
+
+	public static String getBd() {
+		return bd;
+	}
+
+	public static void setBd(String bd) {
+		Var.bd = bd;
+	}
 
 	public static String getInPath() {
 		return inPath;

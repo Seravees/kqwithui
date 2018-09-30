@@ -8,7 +8,6 @@ public class PBKQ {
 	String pb;
 	String strat;
 	String end;
-	String state;
 
 	public String getName() {
 		return name;
@@ -66,19 +65,11 @@ public class PBKQ {
 		this.end = end;
 	}
 
-	public String getState() {
-		return state;
-	}
-
-	public void setState(String state) {
-		this.state = state;
-	}
-
 	@Override
 	public String toString() {
 		return "PBKQ [name=" + name + ", department=" + department + ", date="
 				+ date + ", weekday=" + weekday + ", pb=" + pb + ", strat="
-				+ strat + ", end=" + end + ", state=" + state + "]";
+				+ strat + ", end=" + end + "]";
 	}
 
 }

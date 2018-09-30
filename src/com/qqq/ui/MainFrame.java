@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.Date;
 
 import javax.swing.JButton;
@@ -29,6 +28,7 @@ public class MainFrame implements ActionListener {
 	File file_src;
 	File file_persons;
 	File file_pbkq;
+	File file_bd;
 	File file_pb1, file_pb2;
 	File file_kq1, file_kq2;
 	File file_out;
@@ -40,6 +40,7 @@ public class MainFrame implements ActionListener {
 	JTextField jtf_src;
 	JTextField jtf_persons;
 	JTextField jtf_pbkq;
+	JTextField jtf_bd;
 	JTextField jtf_pb1, jtf_pb2;
 	JTextField jtf_kq1, jtf_kq2;
 	JTextField jtf_out;
@@ -48,7 +49,7 @@ public class MainFrame implements ActionListener {
 	JTextField jtf_add, jtf_addse;
 	JTextField jtf_outpath;
 
-	ConsoleText showArea;
+	// ConsoleText showArea;
 	// JTextArea showArea;
 
 	JScrollPane scrollPane;
@@ -61,13 +62,14 @@ public class MainFrame implements ActionListener {
 		jfc1 = new JFileChooser();
 		jfc1.setCurrentDirectory(jfc1.getSelectedFile());
 
-		showArea = new ConsoleText();
+		// showArea = new ConsoleText();
 		// showArea = new JTextArea();
-		showArea.setBounds(40, 470, 700, 70);
-		showArea.setEditable(false);
+		// showArea.setBounds(40, 470, 700, 70);
+		// showArea.setEditable(false);
 
-		scrollPane = new JScrollPane(showArea);
-		scrollPane.setBounds(40, 470, 700, 70);
+		scrollPane = new JScrollPane();
+		// scrollPane = new JScrollPane(showArea);
+		scrollPane.setBounds(40, 300, 700, 200);
 		scrollPane
 				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
@@ -201,6 +203,36 @@ public class MainFrame implements ActionListener {
 		jp_pbkq.add(jtf_pbkq);
 		jp_pbkq.add(jb_pbkq);
 
+		/****** 表单选择 ******/
+		JPanel jp_bd = new JPanel();
+		jp_bd.setLayout(new FlowLayout());
+		jp_bd.setBounds(0, 105, 700, 35);
+		JLabel jl_bd = new JLabel("表单：");
+		jl_bd.setPreferredSize(new Dimension(125, 25));
+		jtf_bd = new JTextField();
+		jtf_bd.setPreferredSize(new Dimension(400, 25));
+		JButton jb_bd = new JButton("选择");
+		jb_bd.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				jfc1.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				int value = jfc1.showDialog(new JLabel(), "选择表单");
+				if (value == JFileChooser.APPROVE_OPTION) {
+					file_bd = jfc1.getSelectedFile();
+					if (file_bd.isFile()) {
+						jtf_bd.setText(file_bd.getAbsolutePath());
+					}
+				} else {
+					jtf_bd.setText("");
+				}
+			}
+		});
+		jp_bd.add(jl_bd);
+		jp_bd.add(jtf_bd);
+		jp_bd.add(jb_bd);
+
 		// /****** 排班表2选择 ******/
 		// JPanel jp_pb2 = new JPanel();
 		// jp_pb2.setLayout(new FlowLayout());
@@ -297,69 +329,69 @@ public class MainFrame implements ActionListener {
 		// jp_kq2.add(jtf_kq2);
 		// jp_kq2.add(jb_kq2);
 
-		/****** 外出表选择 ******/
-		JPanel jp_out = new JPanel();
-		jp_out.setLayout(new FlowLayout());
-		jp_out.setBounds(0, 210, 700, 35);
-		JLabel jl_out = new JLabel("外出:");
-		jl_out.setPreferredSize(new Dimension(125, 25));
-		jtf_out = new JTextField();
-		jtf_out.setPreferredSize(new Dimension(400, 25));
-		JButton jb_out = new JButton("选择");
-		jb_out.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				// JFileChooser jfc = new JFileChooser(FileSystemView
-				// .getFileSystemView().getHomeDirectory());
-				jfc1.setFileSelectionMode(JFileChooser.FILES_ONLY);
-				int value = jfc1.showDialog(new JLabel(), "选择外出");
-				if (value == JFileChooser.APPROVE_OPTION) {
-					file_out = jfc1.getSelectedFile();
-					if (file_out.isFile()) {
-						jtf_out.setText(file_out.getAbsolutePath());
-					}
-				} else {
-					jtf_out.setText("");
-				}
-			}
-		});
-		jp_out.add(jl_out);
-		jp_out.add(jtf_out);
-		jp_out.add(jb_out);
-
-		/****** 请假表选择 ******/
-		JPanel jp_hol = new JPanel();
-		jp_hol.setLayout(new FlowLayout());
-		jp_hol.setBounds(0, 245, 700, 35);
-		JLabel jl_hol = new JLabel("请假:");
-		jl_hol.setPreferredSize(new Dimension(125, 25));
-		jtf_hol = new JTextField();
-		jtf_hol.setPreferredSize(new Dimension(400, 25));
-		JButton jb_hol = new JButton("选择");
-		jb_hol.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				// JFileChooser jfc = new JFileChooser(FileSystemView
-				// .getFileSystemView().getHomeDirectory());
-				jfc1.setFileSelectionMode(JFileChooser.FILES_ONLY);
-				int value = jfc1.showDialog(new JLabel(), "选择请假");
-				if (value == JFileChooser.APPROVE_OPTION) {
-					file_holiday = jfc1.getSelectedFile();
-					if (file_holiday.isFile()) {
-						jtf_hol.setText(file_holiday.getAbsolutePath());
-					}
-				} else {
-					jtf_hol.setText("");
-				}
-			}
-		});
-		jp_hol.add(jl_hol);
-		jp_hol.add(jtf_hol);
-		jp_hol.add(jb_hol);
+		// /****** 外出表选择 ******/
+		// JPanel jp_out = new JPanel();
+		// jp_out.setLayout(new FlowLayout());
+		// jp_out.setBounds(0, 210, 700, 35);
+		// JLabel jl_out = new JLabel("外出:");
+		// jl_out.setPreferredSize(new Dimension(125, 25));
+		// jtf_out = new JTextField();
+		// jtf_out.setPreferredSize(new Dimension(400, 25));
+		// JButton jb_out = new JButton("选择");
+		// jb_out.addActionListener(new ActionListener() {
+		//
+		// @Override
+		// public void actionPerformed(ActionEvent e) {
+		// // TODO Auto-generated method stub
+		// // JFileChooser jfc = new JFileChooser(FileSystemView
+		// // .getFileSystemView().getHomeDirectory());
+		// jfc1.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		// int value = jfc1.showDialog(new JLabel(), "选择外出");
+		// if (value == JFileChooser.APPROVE_OPTION) {
+		// file_out = jfc1.getSelectedFile();
+		// if (file_out.isFile()) {
+		// jtf_out.setText(file_out.getAbsolutePath());
+		// }
+		// } else {
+		// jtf_out.setText("");
+		// }
+		// }
+		// });
+		// jp_out.add(jl_out);
+		// jp_out.add(jtf_out);
+		// jp_out.add(jb_out);
+		//
+		// /****** 请假表选择 ******/
+		// JPanel jp_hol = new JPanel();
+		// jp_hol.setLayout(new FlowLayout());
+		// jp_hol.setBounds(0, 245, 700, 35);
+		// JLabel jl_hol = new JLabel("请假:");
+		// jl_hol.setPreferredSize(new Dimension(125, 25));
+		// jtf_hol = new JTextField();
+		// jtf_hol.setPreferredSize(new Dimension(400, 25));
+		// JButton jb_hol = new JButton("选择");
+		// jb_hol.addActionListener(new ActionListener() {
+		//
+		// @Override
+		// public void actionPerformed(ActionEvent e) {
+		// // TODO Auto-generated method stub
+		// // JFileChooser jfc = new JFileChooser(FileSystemView
+		// // .getFileSystemView().getHomeDirectory());
+		// jfc1.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		// int value = jfc1.showDialog(new JLabel(), "选择请假");
+		// if (value == JFileChooser.APPROVE_OPTION) {
+		// file_holiday = jfc1.getSelectedFile();
+		// if (file_holiday.isFile()) {
+		// jtf_hol.setText(file_holiday.getAbsolutePath());
+		// }
+		// } else {
+		// jtf_hol.setText("");
+		// }
+		// }
+		// });
+		// jp_hol.add(jl_hol);
+		// jp_hol.add(jtf_hol);
+		// jp_hol.add(jb_hol);
 
 		// /****** 统筹加班表选择 ******/
 		// JPanel jp_add1 = new JPanel();
@@ -457,74 +489,74 @@ public class MainFrame implements ActionListener {
 		// jp_add2se.add(jtf_add2se);
 		// jp_add2se.add(jb_add2se);
 
-		/****** 加班（完成）表选择 ******/
-		JPanel jp_add = new JPanel();
-		jp_add.setLayout(new FlowLayout());
-		jp_add.setBounds(0, 315, 700, 35);
-		JLabel jl_add = new JLabel("加班（全部）:");
-		jl_add.setPreferredSize(new Dimension(125, 25));
-		jtf_add = new JTextField();
-		jtf_add.setPreferredSize(new Dimension(400, 25));
-		JButton jb_add = new JButton("选择");
-		jb_add.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				// JFileChooser jfc = new JFileChooser(FileSystemView
-				// .getFileSystemView().getHomeDirectory());
-				jfc1.setFileSelectionMode(JFileChooser.FILES_ONLY);
-				int value = jfc1.showDialog(new JLabel(), "选择加班（全部）");
-				if (value == JFileChooser.APPROVE_OPTION) {
-					file_add = jfc1.getSelectedFile();
-					if (file_add.isFile()) {
-						jtf_add.setText(file_add.getAbsolutePath());
-					}
-				} else {
-					jtf_add.setText("");
-				}
-			}
-		});
-		jp_add.add(jl_add);
-		jp_add.add(jtf_add);
-		jp_add.add(jb_add);
-
-		/****** 加班（未完成）表选择 ******/
-		JPanel jp_addse = new JPanel();
-		jp_addse.setLayout(new FlowLayout());
-		jp_addse.setBounds(0, 350, 700, 35);
-		JLabel jl_addse = new JLabel("加班（未完成）:");
-		jl_addse.setPreferredSize(new Dimension(125, 25));
-		jtf_addse = new JTextField();
-		jtf_addse.setPreferredSize(new Dimension(400, 25));
-		JButton jb_addse = new JButton("选择");
-		jb_addse.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				// JFileChooser jfc = new JFileChooser(FileSystemView
-				// .getFileSystemView().getHomeDirectory());
-				jfc1.setFileSelectionMode(JFileChooser.FILES_ONLY);
-				int value = jfc1.showDialog(new JLabel(), "选择加班（未完成）");
-				if (value == JFileChooser.APPROVE_OPTION) {
-					file_addse = jfc1.getSelectedFile();
-					if (file_addse.isFile()) {
-						jtf_addse.setText(file_addse.getAbsolutePath());
-					}
-				} else {
-					jtf_addse.setText("");
-				}
-			}
-		});
-		jp_addse.add(jl_addse);
-		jp_addse.add(jtf_addse);
-		jp_addse.add(jb_addse);
+		// /****** 加班（完成）表选择 ******/
+		// JPanel jp_add = new JPanel();
+		// jp_add.setLayout(new FlowLayout());
+		// jp_add.setBounds(0, 315, 700, 35);
+		// JLabel jl_add = new JLabel("加班（全部）:");
+		// jl_add.setPreferredSize(new Dimension(125, 25));
+		// jtf_add = new JTextField();
+		// jtf_add.setPreferredSize(new Dimension(400, 25));
+		// JButton jb_add = new JButton("选择");
+		// jb_add.addActionListener(new ActionListener() {
+		//
+		// @Override
+		// public void actionPerformed(ActionEvent e) {
+		// // TODO Auto-generated method stub
+		// // JFileChooser jfc = new JFileChooser(FileSystemView
+		// // .getFileSystemView().getHomeDirectory());
+		// jfc1.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		// int value = jfc1.showDialog(new JLabel(), "选择加班（全部）");
+		// if (value == JFileChooser.APPROVE_OPTION) {
+		// file_add = jfc1.getSelectedFile();
+		// if (file_add.isFile()) {
+		// jtf_add.setText(file_add.getAbsolutePath());
+		// }
+		// } else {
+		// jtf_add.setText("");
+		// }
+		// }
+		// });
+		// jp_add.add(jl_add);
+		// jp_add.add(jtf_add);
+		// jp_add.add(jb_add);
+		//
+		// /****** 加班（未完成）表选择 ******/
+		// JPanel jp_addse = new JPanel();
+		// jp_addse.setLayout(new FlowLayout());
+		// jp_addse.setBounds(0, 350, 700, 35);
+		// JLabel jl_addse = new JLabel("加班（未完成）:");
+		// jl_addse.setPreferredSize(new Dimension(125, 25));
+		// jtf_addse = new JTextField();
+		// jtf_addse.setPreferredSize(new Dimension(400, 25));
+		// JButton jb_addse = new JButton("选择");
+		// jb_addse.addActionListener(new ActionListener() {
+		//
+		// @Override
+		// public void actionPerformed(ActionEvent e) {
+		// // TODO Auto-generated method stub
+		// // JFileChooser jfc = new JFileChooser(FileSystemView
+		// // .getFileSystemView().getHomeDirectory());
+		// jfc1.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		// int value = jfc1.showDialog(new JLabel(), "选择加班（未完成）");
+		// if (value == JFileChooser.APPROVE_OPTION) {
+		// file_addse = jfc1.getSelectedFile();
+		// if (file_addse.isFile()) {
+		// jtf_addse.setText(file_addse.getAbsolutePath());
+		// }
+		// } else {
+		// jtf_addse.setText("");
+		// }
+		// }
+		// });
+		// jp_addse.add(jl_addse);
+		// jp_addse.add(jtf_addse);
+		// jp_addse.add(jb_addse);
 
 		/****** 输出路径选择 ******/
 		JPanel jp_outpath = new JPanel();
 		jp_outpath.setLayout(new FlowLayout());
-		jp_outpath.setBounds(0, 385, 700, 35);
+		jp_outpath.setBounds(0, 175, 700, 35);
 		JLabel jl_outpath = new JLabel("输出目录:");
 		jl_outpath.setPreferredSize(new Dimension(125, 25));
 		jtf_outpath = new JTextField();
@@ -554,7 +586,7 @@ public class MainFrame implements ActionListener {
 		jp_outpath.add(jb_outpath);
 
 		btn_start = new JButton("START");
-		btn_start.setBounds(650, 420, 75, 35);
+		btn_start.setBounds(650, 220, 75, 35);
 		btn_start.addActionListener(this);
 
 		contentPane = new JPanel();
@@ -562,18 +594,19 @@ public class MainFrame implements ActionListener {
 		contentPane.add(jp_src);
 		contentPane.add(jp_persons);
 		contentPane.add(jp_pbkq);
+		contentPane.add(jp_bd);
 		// contentPane.add(jp_pb1);
 		// contentPane.add(jp_pb2);
 		// contentPane.add(jp_kq1);
 		// contentPane.add(jp_kq2);
-		contentPane.add(jp_out);
-		contentPane.add(jp_hol);
+		// contentPane.add(jp_out);
+		// contentPane.add(jp_hol);
 
 		// contentPane.add(jp_add1);
 		// contentPane.add(jp_add2);
 		// contentPane.add(jp_add2se);
-		contentPane.add(jp_add);
-		contentPane.add(jp_addse);
+		// contentPane.add(jp_add);
+		// contentPane.add(jp_addse);
 		contentPane.add(jp_outpath);
 		contentPane.add(btn_start);
 
@@ -596,7 +629,7 @@ public class MainFrame implements ActionListener {
 				public void run() {
 					// TODO Auto-generated method stub
 					Date start = new Date();
-					showArea.setText("");
+					// showArea.setText("");
 
 					if (!jtf_src.getText().equals("")) {
 						System.out.println(file_src.getAbsolutePath());
@@ -608,30 +641,22 @@ public class MainFrame implements ActionListener {
 						Var.setName(file_persons.getAbsolutePath());
 					}
 
-					// if (!jtf_pb1.getText().equals("")) {
-					// System.out.println(file_pb1.getAbsolutePath());
-					// Var.setPb1(file_pb1.getAbsolutePath());
-					// }
-					//
-					// if (!jtf_pb2.getText().equals("")) {
-					// System.out.println(file_pb2.getAbsolutePath());
-					// Var.setPb2(file_pb2.getAbsolutePath());
-					// } else {
-					// Var.setPb2("");
-					// }
-					//
-					// if (!jtf_kq1.getText().equals("")) {
-					// System.out.println(file_kq1.getAbsolutePath());
-					// Var.setKq1(file_kq1.getAbsolutePath());
-					// }
-					//
-					// if (!jtf_kq2.getText().equals("")) {
-					// System.out.println(file_kq2.getAbsolutePath());
-					// Var.setKq2(file_kq2.getAbsolutePath());
-					// } else {
-					// Var.setKq2("");
-					// }
-
+					/*
+					 * // if (!jtf_pb1.getText().equals("")) { //
+					 * System.out.println(file_pb1.getAbsolutePath()); //
+					 * Var.setPb1(file_pb1.getAbsolutePath()); // } // // if
+					 * (!jtf_pb2.getText().equals("")) { //
+					 * System.out.println(file_pb2.getAbsolutePath()); //
+					 * Var.setPb2(file_pb2.getAbsolutePath()); // } else { //
+					 * Var.setPb2(""); // } // // if
+					 * (!jtf_kq1.getText().equals("")) { //
+					 * System.out.println(file_kq1.getAbsolutePath()); //
+					 * Var.setKq1(file_kq1.getAbsolutePath()); // } // // if
+					 * (!jtf_kq2.getText().equals("")) { //
+					 * System.out.println(file_kq2.getAbsolutePath()); //
+					 * Var.setKq2(file_kq2.getAbsolutePath()); // } else { //
+					 * Var.setKq2(""); // }
+					 */
 					if (!jtf_pbkq.getText().equals("")) {
 						System.out.println(file_pbkq.getAbsolutePath());
 						Var.setPbkq(file_pbkq.getAbsolutePath());
@@ -639,53 +664,44 @@ public class MainFrame implements ActionListener {
 						Var.setPbkq("");
 					}
 
-					if (!jtf_out.getText().equals("")) {
-						System.out.println(file_out.getAbsolutePath());
-						Var.setOut(file_out.getAbsolutePath());
+					if (!jtf_bd.getText().equals("")) {
+						System.out.println(file_bd.getAbsolutePath());
+						Var.setBd(file_bd.getAbsolutePath());
 					} else {
-						Var.setOut("");
+						Var.setBd("");
 					}
 
-					if (!jtf_hol.getText().equals("")) {
-						System.out.println(file_holiday.getAbsolutePath());
-						Var.setHoliday(file_holiday.getAbsolutePath());
-					} else {
-						Var.setHoliday("");
-					}
-
-					// if (!jtf_add1.getText().equals("")) {
-					// System.out.println(file_add1.getAbsolutePath());
-					// Var.setAdd1(file_add1.getAbsolutePath());
-					// } else {
-					// Var.setAdd1("");
-					// }
-					//
-					// if (!jtf_add2.getText().equals("")) {
-					// System.out.println(file_add2.getAbsolutePath());
-					// Var.setAdd2(file_add2.getAbsolutePath());
-					// } else {
-					// Var.setAdd2("");
-					// }
-					//
-					// if (!jtf_add2se.getText().equals("")) {
-					// System.out.println(file_add2se.getAbsolutePath());
-					// Var.setAdd2se(file_add2se.getAbsolutePath());
-					// } else {
-					// Var.setAdd2se("");
-					// }
-
-					if (!jtf_add.getText().equals("")) {
-						System.out.println(file_add.getAbsolutePath());
-					} else {
-						Var.setAdd("");
-					}
-
-					if (!jtf_addse.getText().equals("")) {
-						System.out.println(file_addse.getAbsolutePath());
-					} else {
-						Var.setAddse("");
-					}
-
+					/*
+					 * // if (!jtf_out.getText().equals("")) { //
+					 * System.out.println(file_out.getAbsolutePath()); //
+					 * Var.setOut(file_out.getAbsolutePath()); // } else { //
+					 * Var.setOut(""); // } // // if
+					 * (!jtf_hol.getText().equals("")) { //
+					 * System.out.println(file_holiday.getAbsolutePath()); //
+					 * Var.setHoliday(file_holiday.getAbsolutePath()); // } else
+					 * { // Var.setHoliday(""); // }
+					 * 
+					 * // if (!jtf_add1.getText().equals("")) { //
+					 * System.out.println(file_add1.getAbsolutePath()); //
+					 * Var.setAdd1(file_add1.getAbsolutePath()); // } else { //
+					 * Var.setAdd1(""); // } // // if
+					 * (!jtf_add2.getText().equals("")) { //
+					 * System.out.println(file_add2.getAbsolutePath()); //
+					 * Var.setAdd2(file_add2.getAbsolutePath()); // } else { //
+					 * Var.setAdd2(""); // } // // if
+					 * (!jtf_add2se.getText().equals("")) { //
+					 * System.out.println(file_add2se.getAbsolutePath()); //
+					 * Var.setAdd2se(file_add2se.getAbsolutePath()); // } else {
+					 * // Var.setAdd2se(""); // }
+					 * 
+					 * // if (!jtf_add.getText().equals("")) { //
+					 * System.out.println(file_add.getAbsolutePath()); //
+					 * Var.setAdd(file_add.getAbsolutePath()); // } else { //
+					 * Var.setAdd(""); // } // // if
+					 * (!jtf_addse.getText().equals("")) { //
+					 * System.out.println(file_addse.getAbsolutePath()); // }
+					 * else { // Var.setAddse(""); // }
+					 */
 					if (!jtf_outpath.getText().equals("")) {
 						System.out.println(file_outpath.getAbsolutePath());
 						Var.setOutPath(file_outpath.getAbsolutePath());
@@ -693,7 +709,8 @@ public class MainFrame implements ActionListener {
 
 					try {
 						// Dao.createPerson();
-						Dao.setPBKQ();
+						// Dao.setPBKQ();
+						Dao.setBD();
 						// Dao.setPB();
 						// Dao.setKQ();
 						// Dao.setOut();
@@ -709,9 +726,9 @@ public class MainFrame implements ActionListener {
 						Date end = new Date();
 						System.out.println((end.getTime() - start.getTime())
 								+ "ms");
-					} catch (IOException e1) {
+					} catch (IOException e) {
 						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						e.printStackTrace();
 					}
 
 				}
