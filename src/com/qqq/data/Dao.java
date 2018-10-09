@@ -201,7 +201,7 @@ public class Dao {
 		}
 	}
 
-	public static void setBD() throws IOException {
+	public static void setBD() throws IOException, ParseException {
 		System.out.println("******setBD******");
 
 		List<List<Object>> bds = Tools.readAll(Var.getBd());
@@ -219,12 +219,27 @@ public class Dao {
 					Out out = new Out();
 					out.setDepartment(bds.get(i).get(0).toString());
 					out.setName(bds.get(i).get(2).toString());
-					out.setStart(bds.get(i).get(5).toString());
-					out.setEnd(bds.get(i).get(6).toString());
+					out.setDate(bds.get(i).get(5).toString().substring(5, 10));
+					String start = bds.get(i).get(5).toString().substring(11);
+					String end = bds.get(i).get(6).toString().substring(11);
+					SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+					Date start1 = sdf.parse(start);
+					Date end1 = sdf.parse(end);
+					if (start1.before(sdf.parse("09:01"))) {
+						out.setStart("外出");
+					}else{
+						out.setStart(" ");
+					}
+					if (end1.after(sdf.parse("17:29"))) {
+						out.setEnd("外出");
+					}else{
+						out.setEnd(" ");
+					}
 					out.setState(bds.get(i).get(10).toString());
 
 					outList.add(out);
 				}
+
 				if (bds.get(i).get(3).toString().equals("请假")) {
 					Holiday hol = new Holiday();
 					hol.setDepartment(bds.get(i).get(0).toString());
@@ -235,12 +250,83 @@ public class Dao {
 
 					holList.add(hol);
 				}
-				
+
+				if (bds.get(i).get(3).toString().equals("加班")) {
+					Add add = new Add();
+					add.setDepartment(bds.get(i).get(0).toString());
+					add.setName(bds.get(i).get(2).toString());
+					add.setStart(bds.get(i).get(5).toString());
+					add.setEnd(bds.get(i).get(6).toString());
+					add.setSite(bds.get(i).get(8).toString());
+
+					addList.add(add);
+				}
 			}
 		}
 
-		for (Out o : outList) {
-			System.out.println(o.toString());
+		outPersons = new ArrayList<OutPerson>();
+
+		for (Out out : outList) {
+			if (outPersons.size() > 0) {
+				int j = 0;
+				for (int i = 0; i < outPersons.size(); i++) {
+					if (outPersons.get(i).getName().equals(out.getName())
+							&& outPersons.get(i).getDepartment()
+									.equals(out.getDepartment())) {
+						List<Out> tempOuts = outPersons.get(i).getOuts();
+						tempOuts.add(out);
+						outPersons.get(i).setOuts(tempOuts);
+						j = i;
+						break;
+					}
+				}
+				if (!outPersons.get(j).getName().equals(out.getName())
+						|| !outPersons.get(j).getDepartment()
+								.equals(out.getDepartment())) {
+					OutPerson tempOutPerson = new OutPerson();
+					tempOutPerson.setName(out.getName());
+					tempOutPerson.setDepartment(out.getDepartment());
+					List<Out> tempOuts = new ArrayList<Out>();
+					tempOuts.add(out);
+					tempOutPerson.setOuts(tempOuts);
+					outPersons.add(tempOutPerson);
+				}
+			} else {
+				OutPerson tempOutPerson = new OutPerson();
+				tempOutPerson.setName(out.getName());
+				tempOutPerson.setDepartment(out.getDepartment());
+				List<Out> tempOuts = new ArrayList<Out>();
+				tempOuts.add(out);
+				tempOutPerson.setOuts(tempOuts);
+				outPersons.add(tempOutPerson);
+			}
+		}
+
+		for (OutPerson outPerson : outPersons) {
+			String fileName = outPerson.getDepartment() + "-"
+					+ outPerson.getName();
+			System.out.println(fileName);
+			Workbook wb = Tools.openPerson(fileName, Var.XLS);
+			for (Out out : outPerson.getOuts()) {
+				Sheet sheet = wb.getSheetAt(0);
+				String date = out.getDate();
+				for (int i = 4; i < sheet.getLastRowNum(); i++) {
+					if (sheet.getRow(i).getCell(0).getStringCellValue()
+							.equals(date)) {
+						if (sheet.getRow(i).getCell(3).getStringCellValue()
+								.equals("旷工")
+								&& out.getStart().equals("外出")) {
+							Tools.writeString(wb, i, 3, "外出", true);
+						}
+						if (sheet.getRow(i).getCell(4).getStringCellValue()
+								.equals("旷工")
+								&& out.getEnd().equals("外出")) {
+							Tools.writeString(wb, i, 4, "外出", true);
+						}
+					}
+				}
+			}
+			Tools.savePerson(fileName, Var.XLS, wb);
 		}
 	}
 

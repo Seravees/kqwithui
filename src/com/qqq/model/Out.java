@@ -3,6 +3,7 @@ package com.qqq.model;
 public class Out {
 	String name;
 	String department;
+	String date;
 	String start;
 	String end;
 	String state;
@@ -47,10 +48,19 @@ public class Out {
 		this.department = department;
 	}
 
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
 	@Override
 	public String toString() {
-		return "Out [name=" + name + ", department=" + department + ", start="
-				+ start + ", end=" + end + ", state=" + state + "]";
+		return "Out [name=" + name + ", department=" + department + ", date="
+				+ date + ", start=" + start + ", end=" + end + ", state="
+				+ state + "]";
 	}
 
 }

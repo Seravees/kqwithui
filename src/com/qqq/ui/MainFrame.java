@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Date;
 
 import javax.swing.JButton;
@@ -708,8 +709,8 @@ public class MainFrame implements ActionListener {
 					}
 
 					try {
-						// Dao.createPerson();
-						// Dao.setPBKQ();
+						Dao.createPerson();
+						Dao.setPBKQ();
 						Dao.setBD();
 						// Dao.setPB();
 						// Dao.setKQ();
@@ -727,6 +728,9 @@ public class MainFrame implements ActionListener {
 						System.out.println((end.getTime() - start.getTime())
 								+ "ms");
 					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (ParseException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
