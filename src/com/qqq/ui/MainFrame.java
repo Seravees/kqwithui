@@ -717,9 +717,9 @@ public class MainFrame implements ActionListener {
 						// Dao.setOut();
 						// Dao.setHoliday();
 						// Dao.setAdd();
-						// Dao.fixPB();
-						// Dao.setRowHeight();
-						// Dao.merge();
+						Dao.fixPB();
+						Dao.setRowHeight();
+						Dao.merge();
 
 						new JOptionPane();
 						JOptionPane.showMessageDialog(null, "完成", "完成",

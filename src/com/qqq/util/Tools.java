@@ -112,15 +112,12 @@ public class Tools {
 		style3.setAlignment(HSSFCellStyle.ALIGN_CENTER);
 
 		if (flag) {
-			if (string.contains("缺勤") || string.contains("否")) {
-				cell.setCellStyle(style);
-			} else {
-				cell.setCellStyle(style2);
-			}
+			cell.setCellStyle(style2);
 		} else {
-			cell.setCellStyle(style3);
+			cell.setCellStyle(style);
 		}
 
+		System.out.println(string.getClass());
 		System.out.println(rownum + "," + cellnum + ":" + string);
 
 		cell.setCellValue(string);
@@ -259,9 +256,9 @@ public class Tools {
 						switch (cell.getCellType()) {
 						case HSSFCell.CELL_TYPE_STRING:
 							temp.add(cell.getStringCellValue());
-							
-//							 System.out.println(cell.getCellType()
-//							 + cell.getStringCellValue()+cell.getCellType());
+
+							// System.out.println(cell.getCellType()
+							// + cell.getStringCellValue()+cell.getCellType());
 							break;
 						case HSSFCell.CELL_TYPE_NUMERIC:
 							temp.add(cell.getNumericCellValue());

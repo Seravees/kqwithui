@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.ss.usermodel.Cell;
@@ -18,6 +19,8 @@ import org.apache.poi.ss.util.CellRangeAddress;
 
 import com.qqq.model.Add;
 import com.qqq.model.AddPerson;
+import com.qqq.model.CC;
+import com.qqq.model.CCPerson;
 import com.qqq.model.Holiday;
 import com.qqq.model.HolidayPerson;
 import com.qqq.model.KQ;
@@ -39,6 +42,7 @@ public class Dao {
 	static List<KQPerson> kqPersons;
 	static List<HolidayPerson> holidayPersons;
 	static List<OutPerson> outPersons;
+	static List<CCPerson> ccPersons;
 	static List<AddPerson> addPersons;
 
 	public static void createPerson() throws IOException {
@@ -207,6 +211,7 @@ public class Dao {
 		List<List<Object>> bds = Tools.readAll(Var.getBd());
 
 		List<Out> outList = new ArrayList<Out>();
+		List<CC> ccList = new ArrayList<CC>();
 		List<Holiday> holList = new ArrayList<Holiday>();
 		List<Add> addList = new ArrayList<Add>();
 
@@ -227,17 +232,28 @@ public class Dao {
 					Date end1 = sdf.parse(end);
 					if (start1.before(sdf.parse("09:01"))) {
 						out.setStart("外出");
-					}else{
+					} else {
 						out.setStart(" ");
 					}
 					if (end1.after(sdf.parse("17:29"))) {
 						out.setEnd("外出");
-					}else{
+					} else {
 						out.setEnd(" ");
 					}
 					out.setState(bds.get(i).get(10).toString());
 
 					outList.add(out);
+				}
+
+				if (bds.get(i).get(4).toString().equals("出差")) {
+					CC cc = new CC();
+					cc.setDepartment(bds.get(i).get(0).toString());
+					cc.setName(bds.get(i).get(2).toString());
+					cc.setStart(bds.get(i).get(5).toString().substring(5));
+					cc.setEnd(bds.get(i).get(6).toString().substring(5));
+					cc.setState(bds.get(i).get(10).toString());
+
+					ccList.add(cc);
 				}
 
 				if (bds.get(i).get(3).toString().equals("请假")) {
@@ -247,6 +263,25 @@ public class Dao {
 					hol.setStart(bds.get(i).get(5).toString());
 					hol.setEnd(bds.get(i).get(6).toString());
 					hol.setType(bds.get(i).get(4).toString());
+					String hour = bds.get(i).get(7).toString();
+					double hours = 0;
+					if (hour.contains("天")) {
+						if (hour.contains("小时")) {
+							hours = Double.parseDouble(hour.substring(0,
+									hour.indexOf("天")))
+									* 8
+									+ Double.parseDouble(hour.substring(
+											hour.indexOf("天") + 1,
+											hour.indexOf("小时")));
+						} else {
+							hours = Double.parseDouble(hour.substring(0,
+									hour.indexOf("天"))) * 8;
+						}
+					} else if (hour.contains("小时")) {
+						hours = Double.parseDouble(hour.substring(0,
+								hour.indexOf("小时")));
+					}
+					hol.setHours(hours);
 
 					holList.add(hol);
 				}
@@ -255,9 +290,20 @@ public class Dao {
 					Add add = new Add();
 					add.setDepartment(bds.get(i).get(0).toString());
 					add.setName(bds.get(i).get(2).toString());
-					add.setStart(bds.get(i).get(5).toString());
-					add.setEnd(bds.get(i).get(6).toString());
+					String start = bds.get(i).get(5).toString();
+					String end = bds.get(i).get(6).toString();
+					add.setStart(start);
+					add.setEnd(end);
 					add.setSite(bds.get(i).get(8).toString());
+					// SimpleDateFormat sdf = new SimpleDateFormat(
+					// "yyyy-MM-dd HH:mm");
+					// double hours = (double)(sdf.parse(end).getTime() -
+					// sdf.parse(start)
+					// .getTime()) / 60 / 60 / 1000;
+					String hour = bds.get(i).get(7).toString();
+					double hours = Double.parseDouble(hour.substring(0,
+							hour.indexOf("小时")));
+					add.setHours(hours);
 
 					addList.add(add);
 				}
@@ -302,26 +348,264 @@ public class Dao {
 			}
 		}
 
-		for (OutPerson outPerson : outPersons) {
-			String fileName = outPerson.getDepartment() + "-"
-					+ outPerson.getName();
+		ccPersons = new ArrayList<CCPerson>();
+
+		for (CC cc : ccList) {
+			if (ccPersons.size() > 0) {
+				int j = 0;
+				for (int i = 0; i < ccPersons.size(); i++) {
+					if (ccPersons.get(i).getName().equals(cc.getName())
+							&& ccPersons.get(i).getDepartment()
+									.equals(cc.getDepartment())) {
+						List<CC> tempCCs = ccPersons.get(i).getCcs();
+						tempCCs.add(cc);
+						ccPersons.get(i).setCcs(tempCCs);
+						j = i;
+						break;
+					}
+				}
+				if (!ccPersons.get(j).getName().equals(cc.getName())
+						|| !ccPersons.get(j).getDepartment()
+								.equals(cc.getDepartment())) {
+					CCPerson tempCCPerson = new CCPerson();
+					tempCCPerson.setName(cc.getName());
+					tempCCPerson.setDepartment(cc.getDepartment());
+					List<CC> tempCCs = new ArrayList<CC>();
+					tempCCs.add(cc);
+					tempCCPerson.setCcs(tempCCs);
+					ccPersons.add(tempCCPerson);
+				}
+			} else {
+				CCPerson tempCCPerson = new CCPerson();
+				tempCCPerson.setName(cc.getName());
+				tempCCPerson.setDepartment(cc.getDepartment());
+				List<CC> tempCCs = new ArrayList<CC>();
+				tempCCs.add(cc);
+				tempCCPerson.setCcs(tempCCs);
+				ccPersons.add(tempCCPerson);
+			}
+		}
+
+		holidayPersons = new ArrayList<HolidayPerson>();
+
+		for (Holiday hol : holList) {
+			if (holidayPersons.size() > 0) {
+				int j = 0;
+				for (int i = 0; i < holidayPersons.size(); i++) {
+					if (holidayPersons.get(i).getName().equals(hol.getName())
+							&& holidayPersons.get(i).getDepartment()
+									.equals(hol.getDepartment())) {
+						List<Holiday> tempHolidays = holidayPersons.get(i)
+								.getHolidays();
+						tempHolidays.add(hol);
+						holidayPersons.get(i).setHolidays(tempHolidays);
+						j = i;
+						break;
+					}
+				}
+				if (!holidayPersons.get(j).getName().equals(hol.getName())
+						|| !holidayPersons.get(j).getDepartment()
+								.equals(hol.getDepartment())) {
+					HolidayPerson tempHolidayPerson = new HolidayPerson();
+					tempHolidayPerson.setName(hol.getName());
+					tempHolidayPerson.setDepartment(hol.getDepartment());
+					List<Holiday> tempHolidays = new ArrayList<Holiday>();
+					tempHolidays.add(hol);
+					tempHolidayPerson.setHolidays(tempHolidays);
+					holidayPersons.add(tempHolidayPerson);
+				}
+			} else {
+				HolidayPerson tempHolidayPerson = new HolidayPerson();
+				tempHolidayPerson.setName(hol.getName());
+				tempHolidayPerson.setDepartment(hol.getDepartment());
+				List<Holiday> tempHolidays = new ArrayList<Holiday>();
+				tempHolidays.add(hol);
+				tempHolidayPerson.setHolidays(tempHolidays);
+				holidayPersons.add(tempHolidayPerson);
+			}
+		}
+
+		addPersons = new ArrayList<AddPerson>();
+
+		for (Add add : addList) {
+			if (addPersons.size() > 0) {
+				int j = 0;
+				for (int i = 0; i < addPersons.size(); i++) {
+					if (addPersons.get(i).getName().equals(add.getName())
+							&& addPersons.get(i).getDepartment()
+									.equals(add.getDepartment())) {
+						List<Add> tempAdds = addPersons.get(i).getAdds();
+						tempAdds.add(add);
+						addPersons.get(i).setAdds(tempAdds);
+						j = i;
+						break;
+					}
+				}
+				if (!addPersons.get(j).getName().equals(add.getName())
+						|| !addPersons.get(j).getDepartment()
+								.equals(add.getDepartment())) {
+					AddPerson tempAddPerson = new AddPerson();
+					tempAddPerson.setName(add.getName());
+					tempAddPerson.setDepartment(add.getDepartment());
+					List<Add> tempAdds = new ArrayList<Add>();
+					tempAdds.add(add);
+					tempAddPerson.setAdds(tempAdds);
+					addPersons.add(tempAddPerson);
+				}
+			} else {
+				AddPerson tempAddPerson = new AddPerson();
+				tempAddPerson.setName(add.getName());
+				tempAddPerson.setDepartment(add.getDepartment());
+				List<Add> tempAdds = new ArrayList<Add>();
+				tempAdds.add(add);
+				tempAddPerson.setAdds(tempAdds);
+				addPersons.add(tempAddPerson);
+			}
+		}
+
+		// for (OutPerson outPerson : outPersons) {
+		// String fileName = outPerson.getDepartment() + "-"
+		// + outPerson.getName();
+		// System.out.println(fileName);
+		// Workbook wb = Tools.openPerson(fileName, Var.XLS);
+		// for (Out out : outPerson.getOuts()) {
+		// Sheet sheet = wb.getSheetAt(0);
+		// String date = out.getDate();
+		// for (int i = 4; i < sheet.getLastRowNum(); i++) {
+		// if (sheet.getRow(i).getCell(0).getStringCellValue()
+		// .equals(date)) {
+		// if (sheet.getRow(i).getCell(3).getStringCellValue()
+		// .equals("旷工")
+		// && out.getStart().equals("外出")) {
+		// Tools.writeString(wb, i, 3, "外出", true);
+		// }
+		// if (sheet.getRow(i).getCell(4).getStringCellValue()
+		// .equals("旷工")
+		// && out.getEnd().equals("外出")) {
+		// Tools.writeString(wb, i, 4, "外出", true);
+		// }
+		// }
+		// }
+		// }
+		// Tools.savePerson(fileName, Var.XLS, wb);
+		// }
+
+		// for (CCPerson ccPerson : ccPersons) {
+		// String fileName = ccPerson.getDepartment() + "-"
+		// + ccPerson.getName();
+		// System.out.println(fileName);
+		// Workbook wb = Tools.openPerson(fileName, Var.XLS);
+		// for (CC cc : ccPerson.getCcs()) {
+		// Sheet sheet = wb.getSheetAt(0);
+		// for (int i = 4; i < sheet.getLastRowNum(); i++) {
+		// String date = sheet.getRow(i).getCell(0)
+		// .getStringCellValue();
+		// SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
+		// if (date.contains("-")) {
+		// if (!sdf.parse(date).before(sdf.parse(cc.getStart()))
+		// && !sdf.parse(date).after(
+		// sdf.parse(cc.getEnd()))) {
+		// if (sheet.getRow(i).getCell(3).getStringCellValue()
+		// .equals("旷工")) {
+		// Tools.writeString(wb, i, 3, "出差", true);
+		// }
+		// if (sheet.getRow(i).getCell(4).getStringCellValue()
+		// .equals("旷工")) {
+		// Tools.writeString(wb, i, 4, "出差", true);
+		// }
+		// }
+		// }
+		// }
+		// }
+		// }
+
+		for (HolidayPerson holidayPerson : holidayPersons) {
+			String fileName = holidayPerson.getDepartment() + "-"
+					+ holidayPerson.getName();
 			System.out.println(fileName);
 			Workbook wb = Tools.openPerson(fileName, Var.XLS);
-			for (Out out : outPerson.getOuts()) {
+			for (Holiday holiday : holidayPerson.getHolidays()) {
 				Sheet sheet = wb.getSheetAt(0);
-				String date = out.getDate();
 				for (int i = 4; i < sheet.getLastRowNum(); i++) {
+					String date = holiday.getStart().substring(5, 10);
 					if (sheet.getRow(i).getCell(0).getStringCellValue()
 							.equals(date)) {
-						if (sheet.getRow(i).getCell(3).getStringCellValue()
-								.equals("旷工")
-								&& out.getStart().equals("外出")) {
-							Tools.writeString(wb, i, 3, "外出", true);
+						if (sheet.getRow(i).getCell(10).getStringCellValue() == ""
+								|| sheet.getRow(i).getCell(10) == null) {
+							Tools.writeString(wb, i, 10, holiday.getStart(),
+									true);
+							Tools.writeString(wb, i, 11, holiday.getEnd(), true);
+							Tools.writeDouble(wb, i, 12, holiday.getHours(),
+									true);
+							Tools.writeString(wb, i, 13, holiday.getType(),
+									true);
+							break;
+						} else if (!sheet.getRow(i + 1).getCell(0)
+								.getStringCellValue().equals(date)) {
+							// System.out.println("" + i);
+							Tools.shift(wb, i + 1);
+							Tools.writeString(wb, i + 1, 10,
+									holiday.getStart(), true);
+							Tools.writeString(wb, i + 1, 11, holiday.getEnd(),
+									true);
+							Tools.writeDouble(wb, i + 1, 12,
+									holiday.getHours(), true);
+							Tools.writeString(wb, i + 1, 13, holiday.getType(),
+									true);
+							break;
 						}
-						if (sheet.getRow(i).getCell(4).getStringCellValue()
-								.equals("旷工")
-								&& out.getEnd().equals("外出")) {
-							Tools.writeString(wb, i, 4, "外出", true);
+					}
+				}
+			}
+			Tools.savePerson(fileName, Var.XLS, wb);
+		}
+
+		for (AddPerson addPerson : addPersons) {
+			String fileName = addPerson.getDepartment() + "-"
+					+ addPerson.getName();
+			System.out.println(fileName);
+			Workbook wb = Tools.openPerson(fileName, Var.XLS);
+			for (Add add : addPerson.getAdds()) {
+				Sheet sheet = wb.getSheetAt(0);
+				for (int i = 4; i < sheet.getLastRowNum(); i++) {
+					String date = add.getStart().substring(5, 10);
+					if (sheet.getRow(i).getCell(0).getStringCellValue()
+							.equals(date)) {
+						if (sheet.getRow(i).getCell(6).getStringCellValue() == ""
+								|| sheet.getRow(i).getCell(6) == null) {
+							Tools.writeString(wb, i, 5, add.getSite(), true);
+							Tools.writeString(wb, i, 6, add.getStart(), true);
+							Tools.writeString(wb, i, 7, add.getEnd(), true);
+							Tools.writeDouble(wb, i, 8, add.getHours(), true);
+							break;
+						} else if (!sheet.getRow(i + 1).getCell(0)
+								.getStringCellValue().equals(date)) {
+							if (sheet.getRow(i).getCell(6).getStringCellValue() == add
+									.getStart()
+									&& sheet.getRow(i).getCell(7)
+											.getStringCellValue() == add
+											.getEnd()) {
+								if (sheet.getRow(i).getCell(5)
+										.getStringCellValue().isEmpty()
+										|| sheet.getRow(i).getCell(5) == null) {
+									Tools.writeString(wb, i, 5, add.getSite(),
+											true);
+									break;
+								} else {
+									break;
+								}
+							} else {
+								Tools.shift(wb, i + 1);
+								Tools.writeString(wb, i + 1, 5, add.getSite(),
+										true);
+								Tools.writeString(wb, i + 1, 6, add.getStart(),
+										true);
+								Tools.writeString(wb, i + 1, 7, add.getEnd(),
+										true);
+								Tools.writeDouble(wb, i + 1, 8, add.getHours(),
+										true);
+								break;
+							}
 						}
 					}
 				}
@@ -1132,64 +1416,68 @@ public class Dao {
 	public static void fixPB() throws IOException {
 		System.out.println("******fixPB******");
 
-		for (PBPerson pbPerson : pbPersons) {
+		for (PBKQPerson pbPerson : pbkqPersons) {
 			String fileName = pbPerson.getDepartment() + "-"
 					+ pbPerson.getName();
 			// System.out.println(fileName);
 			Workbook wb = Tools.openPerson(fileName, Var.XLS);
-			Sheet sheet = wb.getSheetAt(0);
-			for (int i = 4; i < sheet.getLastRowNum(); i++) {
-				Row row = sheet.getRow(i);
+			if (wb != null) {
+				Sheet sheet = wb.getSheetAt(0);
+				for (int i = 4; i < sheet.getLastRowNum(); i++) {
+					Row row = sheet.getRow(i);
 
-				if (row.getCell(2) != null) {
-					if ((row.getCell(2).getStringCellValue().contains("中班") || row
-							.getCell(2).getStringCellValue().contains("晚班"))
-							&& row.getCell(10).getStringCellValue() != ""
-							&& !row.getCell(0)
-									.getStringCellValue()
-									.equals(sheet.getRow(i - 1).getCell(0)
-											.getStringCellValue())) {
-						int temp = 0;
-						temp = (int) (row.getCell(12).getNumericCellValue() / 8);
-						for (int j = 0; j < temp; j++) {
-							if (sheet.getRow(i + j).getCell(2)
-									.getStringCellValue().contains("中班")) {
-								pbPerson.setZhongban(pbPerson.getZhongban() - 1);
-								System.out.println(pbPerson.getName()
-										+ "zhong-" + 1);
-							} else if (sheet.getRow(i + j).getCell(2)
-									.getStringCellValue().contains("晚班")) {
-								pbPerson.setYeban(pbPerson.getYeban() - 1);
-								System.out.println(pbPerson.getName() + "ye-"
-										+ 1);
+					if (row.getCell(2) != null) {
+						if ((row.getCell(2).getStringCellValue().contains("中班") || row
+								.getCell(2).getStringCellValue().contains("晚班"))
+								&& row.getCell(10).getStringCellValue() != ""
+								&& !row.getCell(0)
+										.getStringCellValue()
+										.equals(sheet.getRow(i - 1).getCell(0)
+												.getStringCellValue())) {
+							int temp = 0;
+							temp = (int) (row.getCell(12).getNumericCellValue() / 8);
+							for (int j = 0; j < temp; j++) {
+								if (sheet.getRow(i + j).getCell(2)
+										.getStringCellValue().contains("中班")) {
+									pbPerson.setZhongban(pbPerson.getZhongban() - 1);
+									System.out.println(pbPerson.getName()
+											+ "zhong-" + 1);
+								} else if (sheet.getRow(i + j).getCell(2)
+										.getStringCellValue().contains("晚班")) {
+									pbPerson.setYeban(pbPerson.getYeban() - 1);
+									System.out.println(pbPerson.getName()
+											+ "ye-" + 1);
+								}
 							}
+
 						}
 
-					}
-
-					if (row.getCell(6).getStringCellValue().contains("21:00")
-							&& row.getCell(7).getStringCellValue()
-									.contains("09:00")
-							&& !row.getCell(0)
-									.getStringCellValue()
-									.equals(sheet.getRow(i - 1).getCell(0)
-											.getStringCellValue())) {
-						pbPerson.setYeban(pbPerson.getYeban() + 1);
-						System.out.println(pbPerson.getName() + "ye+");
+						if (row.getCell(6).getStringCellValue()
+								.contains("21:00")
+								&& row.getCell(7).getStringCellValue()
+										.contains("09:00")
+								&& !row.getCell(0)
+										.getStringCellValue()
+										.equals(sheet.getRow(i - 1).getCell(0)
+												.getStringCellValue())) {
+							pbPerson.setYeban(pbPerson.getYeban() + 1);
+							System.out.println(pbPerson.getName() + "ye+");
+						}
 					}
 				}
-			}
 
-			for (int i = 36; i <= sheet.getLastRowNum(); i++) {
-				if (sheet.getRow(i).getCell(0).getStringCellValue()
-						.equals("中班数：")) {
-					Tools.writeString(wb, i, 1, "" + pbPerson.getZhongban(),
-							false);
-					Tools.writeString(wb, i, 4, "" + pbPerson.getYeban(), false);
+				for (int i = 36; i <= sheet.getLastRowNum(); i++) {
+					if (sheet.getRow(i).getCell(0).getStringCellValue()
+							.equals("中班数：")) {
+						Tools.writeString(wb, i, 1,
+								"" + pbPerson.getZhongban(), false);
+						Tools.writeString(wb, i, 4, "" + pbPerson.getYeban(),
+								false);
+					}
 				}
-			}
 
-			Tools.savePerson(fileName, Var.XLS, wb);
+				Tools.savePerson(fileName, Var.XLS, wb);
+			}
 		}
 	}
 
