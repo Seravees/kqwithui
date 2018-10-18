@@ -78,7 +78,7 @@ public class Tools {
 
 	@SuppressWarnings("deprecation")
 	public static void writeString(Workbook wb, int rownum, int cellnum,
-			String string, boolean flag) {
+			String string, int flag) {
 		Sheet sheet = wb.getSheetAt(0);
 		Row row = sheet.getRow(rownum);
 		Cell cell = row.getCell(cellnum);
@@ -111,13 +111,15 @@ public class Tools {
 		style3.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
 		style3.setAlignment(HSSFCellStyle.ALIGN_CENTER);
 
-		if (flag) {
+		if (flag == 2) {
 			cell.setCellStyle(style2);
-		} else {
+		} else if (flag == 1) {
 			cell.setCellStyle(style);
+		} else {
+			cell.setCellStyle(style3);
 		}
 
-		System.out.println(string.getClass());
+		// System.out.println(string.getClass());
 		System.out.println(rownum + "," + cellnum + ":" + string);
 
 		cell.setCellValue(string);
