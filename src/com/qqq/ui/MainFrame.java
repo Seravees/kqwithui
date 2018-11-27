@@ -50,8 +50,8 @@ public class MainFrame implements ActionListener {
 	JTextField jtf_add, jtf_addse;
 	JTextField jtf_outpath;
 
-	// ConsoleText showArea;
-	// JTextArea showArea;
+	ConsoleText showArea;
+	//JTextArea showArea;
 
 	JScrollPane scrollPane;
 
@@ -63,13 +63,13 @@ public class MainFrame implements ActionListener {
 		jfc1 = new JFileChooser();
 		jfc1.setCurrentDirectory(jfc1.getSelectedFile());
 
-		// showArea = new ConsoleText();
-		// showArea = new JTextArea();
-		// showArea.setBounds(40, 470, 700, 70);
-		// showArea.setEditable(false);
+		showArea = new ConsoleText();
+		//showArea = new JTextArea();
+		showArea.setBounds(40, 470, 700, 70);
+		showArea.setEditable(false);
 
 		scrollPane = new JScrollPane();
-		// scrollPane = new JScrollPane(showArea);
+		scrollPane = new JScrollPane(showArea);
 		scrollPane.setBounds(40, 300, 700, 200);
 		scrollPane
 				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);

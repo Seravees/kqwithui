@@ -1,13 +1,11 @@
 package com.qqq.data;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.ss.usermodel.Cell;
@@ -23,11 +21,9 @@ import com.qqq.model.CC;
 import com.qqq.model.CCPerson;
 import com.qqq.model.Holiday;
 import com.qqq.model.HolidayPerson;
-import com.qqq.model.KQ;
 import com.qqq.model.KQPerson;
 import com.qqq.model.Out;
 import com.qqq.model.OutPerson;
-import com.qqq.model.PB;
 import com.qqq.model.PBKQ;
 import com.qqq.model.PBKQPerson;
 import com.qqq.model.PBPerson;
@@ -182,27 +178,30 @@ public class Dao {
 							.get(i).getWeekday(), 2);
 					Tools.writeString(wb, i + 4, 2, pbkqPerson.getPbkqs()
 							.get(i).getPb(), 2);
-					if (pbkqPerson.getPbkqs().get(i).getStrat().equals("旷工")
-							|| pbkqPerson.getPbkqs().get(i).getStrat()
-									.contains("迟到")
-							|| pbkqPerson.getPbkqs().get(i).getStrat()
-									.contains("早退")) {
-						Tools.writeString(wb, i + 4, 3, pbkqPerson.getPbkqs()
-								.get(i).getStrat(), 1);
-					} else {
-						Tools.writeString(wb, i + 4, 3, pbkqPerson.getPbkqs()
-								.get(i).getStrat(), 2);
-					}
-					if (pbkqPerson.getPbkqs().get(i).getEnd().equals("旷工")
-							|| pbkqPerson.getPbkqs().get(i).getEnd()
-									.contains("迟到")
-							|| pbkqPerson.getPbkqs().get(i).getEnd()
-									.contains("早退")) {
-						Tools.writeString(wb, i + 4, 4, pbkqPerson.getPbkqs()
-								.get(i).getEnd(), 1);
-					} else {
-						Tools.writeString(wb, i + 4, 4, pbkqPerson.getPbkqs()
-								.get(i).getEnd(), 2);
+					if (!pbkqPerson.getPbkqs().get(i).getPb().equals("休息")) {
+						if (pbkqPerson.getPbkqs().get(i).getStrat()
+								.equals("旷工")
+								|| pbkqPerson.getPbkqs().get(i).getStrat()
+										.contains("迟到")
+								|| pbkqPerson.getPbkqs().get(i).getStrat()
+										.contains("早退")) {
+							Tools.writeString(wb, i + 4, 3, pbkqPerson
+									.getPbkqs().get(i).getStrat(), 1);
+						} else {
+							Tools.writeString(wb, i + 4, 3, pbkqPerson
+									.getPbkqs().get(i).getStrat(), 2);
+						}
+						if (pbkqPerson.getPbkqs().get(i).getEnd().equals("旷工")
+								|| pbkqPerson.getPbkqs().get(i).getEnd()
+										.contains("迟到")
+								|| pbkqPerson.getPbkqs().get(i).getEnd()
+										.contains("早退")) {
+							Tools.writeString(wb, i + 4, 4, pbkqPerson
+									.getPbkqs().get(i).getEnd(), 1);
+						} else {
+							Tools.writeString(wb, i + 4, 4, pbkqPerson
+									.getPbkqs().get(i).getEnd(), 2);
+						}
 					}
 				}
 				Sheet sheet = wb.getSheetAt(0);
@@ -310,6 +309,7 @@ public class Dao {
 					add.setName(bds.get(i).get(2).toString());
 					String start = bds.get(i).get(5).toString();
 					String end = bds.get(i).get(6).toString();
+					add.setType(bds.get(i).get(4).toString());
 					add.setStart(start);
 					add.setEnd(end);
 					add.setSite(bds.get(i).get(8).toString());
@@ -417,6 +417,27 @@ public class Dao {
 								.getHolidays();
 						tempHolidays.add(hol);
 						holidayPersons.get(i).setHolidays(tempHolidays);
+						if (hol.getType().equals("年假")) {
+							holidayPersons.get(i).setNianjia(
+									holidayPersons.get(i).getNianjia()
+											+ hol.getHours());
+						} else if (hol.getType().equals("门诊病假")) {
+							holidayPersons.get(i).setBingjia(
+									holidayPersons.get(i).getBingjia()
+											+ hol.getHours());
+						} else if (hol.getType().equals("事假")) {
+							holidayPersons.get(i).setShijia(
+									holidayPersons.get(i).getShijia()
+											+ hol.getHours());
+						} else if (hol.getType().equals("调休")) {
+							holidayPersons.get(i).setTiaoxiu(
+									holidayPersons.get(i).getTiaoxiu()
+											+ hol.getHours());
+						} else {
+							holidayPersons.get(i).setQita(
+									holidayPersons.get(i).getQita()
+											+ hol.getHours());
+						}
 						j = i;
 						break;
 					}
@@ -430,6 +451,17 @@ public class Dao {
 					List<Holiday> tempHolidays = new ArrayList<Holiday>();
 					tempHolidays.add(hol);
 					tempHolidayPerson.setHolidays(tempHolidays);
+					if (hol.getType().equals("年假")) {
+						tempHolidayPerson.setNianjia(hol.getHours());
+					} else if (hol.getType().equals("门诊病假")) {
+						tempHolidayPerson.setBingjia(hol.getHours());
+					} else if (hol.getType().equals("事假")) {
+						tempHolidayPerson.setShijia(hol.getHours());
+					} else if (hol.getType().equals("调休")) {
+						tempHolidayPerson.setTiaoxiu(hol.getHours());
+					} else {
+						tempHolidayPerson.setQita(hol.getHours());
+					}
 					holidayPersons.add(tempHolidayPerson);
 				}
 			} else {
@@ -439,6 +471,17 @@ public class Dao {
 				List<Holiday> tempHolidays = new ArrayList<Holiday>();
 				tempHolidays.add(hol);
 				tempHolidayPerson.setHolidays(tempHolidays);
+				if (hol.getType().equals("年假")) {
+					tempHolidayPerson.setNianjia(hol.getHours());
+				} else if (hol.getType().equals("门诊病假")) {
+					tempHolidayPerson.setBingjia(hol.getHours());
+				} else if (hol.getType().equals("事假")) {
+					tempHolidayPerson.setShijia(hol.getHours());
+				} else if (hol.getType().equals("调休")) {
+					tempHolidayPerson.setTiaoxiu(hol.getHours());
+				} else {
+					tempHolidayPerson.setQita(hol.getHours());
+				}
 				holidayPersons.add(tempHolidayPerson);
 			}
 		}
@@ -455,6 +498,19 @@ public class Dao {
 						List<Add> tempAdds = addPersons.get(i).getAdds();
 						tempAdds.add(add);
 						addPersons.get(i).setAdds(tempAdds);
+						if (add.getType().equals("工作日加班")) {
+							addPersons.get(i).setAdd_weekday(
+									addPersons.get(i).getAdd_weekday()
+											+ add.getHours());
+						} else if (add.getType().equals("休息日加班")) {
+							addPersons.get(i).setAdd_weekend(
+									addPersons.get(i).getAdd_weekend()
+											+ add.getHours());
+						} else if (add.getType().equals("节假日加班")) {
+							addPersons.get(i).setAdd_holiday(
+									addPersons.get(i).getAdd_holiday()
+											+ add.getHours());
+						}
 						j = i;
 						break;
 					}
@@ -468,6 +524,13 @@ public class Dao {
 					List<Add> tempAdds = new ArrayList<Add>();
 					tempAdds.add(add);
 					tempAddPerson.setAdds(tempAdds);
+					if (add.getType().equals("工作日加班")) {
+						tempAddPerson.setAdd_weekday(add.getHours());
+					} else if (add.getType().equals("休息日加班")) {
+						tempAddPerson.setAdd_weekend(add.getHours());
+					} else if (add.getType().equals("节假日加班")) {
+						tempAddPerson.setAdd_holiday(add.getHours());
+					}
 					addPersons.add(tempAddPerson);
 				}
 			} else {
@@ -477,73 +540,133 @@ public class Dao {
 				List<Add> tempAdds = new ArrayList<Add>();
 				tempAdds.add(add);
 				tempAddPerson.setAdds(tempAdds);
+				if (add.getType().equals("工作日加班")) {
+					tempAddPerson.setAdd_weekday(add.getHours());
+				} else if (add.getType().equals("休息日加班")) {
+					tempAddPerson.setAdd_weekend(add.getHours());
+				} else if (add.getType().equals("节假日加班")) {
+					tempAddPerson.setAdd_holiday(add.getHours());
+				}
 				addPersons.add(tempAddPerson);
 			}
 		}
 
-		// for (OutPerson outPerson : outPersons) {
-		// String fileName = outPerson.getDepartment() + "-"
-		// + outPerson.getName();
-		// System.out.println(fileName);
-		// Workbook wb = Tools.openPerson(fileName, Var.XLS);
-		// for (Out out : outPerson.getOuts()) {
-		// Sheet sheet = wb.getSheetAt(0);
-		// String date = out.getDate();
-		// for (int i = 4; i < sheet.getLastRowNum(); i++) {
-		// if (sheet.getRow(i).getCell(0).getStringCellValue()
-		// .equals(date)) {
-		// if (sheet.getRow(i).getCell(3).getStringCellValue()
-		// .equals("旷工")
-		// && out.getStart().equals("外出")) {
-		// Tools.writeString(wb, i, 3, "外出", true);
-		// }
-		// if (sheet.getRow(i).getCell(4).getStringCellValue()
-		// .equals("旷工")
-		// && out.getEnd().equals("外出")) {
-		// Tools.writeString(wb, i, 4, "外出", true);
-		// }
-		// }
-		// }
-		// }
-		// Tools.savePerson(fileName, Var.XLS, wb);
-		// }
+		for (OutPerson outPerson : outPersons) {
+			String fileName = outPerson.getDepartment() + "-"
+					+ outPerson.getName();
+			System.out.println(fileName);
+			Workbook wb = Tools.openPerson(fileName, Var.XLS);
+			for (Out out : outPerson.getOuts()) {
+				Sheet sheet = wb.getSheetAt(0);
+				String date = out.getDate();
+				for (int i = 4; i < sheet.getLastRowNum(); i++) {
+					if (sheet.getRow(i).getCell(0).getStringCellValue()
+							.equals(date)) {
+						if ((sheet.getRow(i).getCell(3).getStringCellValue()
+								.equals("旷工") || sheet.getRow(i).getCell(3)
+								.getStringCellValue().isEmpty())
+								&& out.getStart().equals("外出")) {
+							Tools.writeString(wb, i, 3, "外出", 2);
+						}
+						System.out.println();
+						if ((sheet.getRow(i).getCell(4).getStringCellValue()
+								.equals("旷工") || sheet.getRow(i).getCell(4)
+								.getStringCellValue().isEmpty())
+								&& out.getEnd().equals("外出")) {
+							Tools.writeString(wb, i, 4, "外出", 2);
+						}
+					}
+				}
+			}
+			Tools.savePerson(fileName, Var.XLS, wb);
+		}
 
-		// for (CCPerson ccPerson : ccPersons) {
-		// String fileName = ccPerson.getDepartment() + "-"
-		// + ccPerson.getName();
-		// System.out.println(fileName);
-		// Workbook wb = Tools.openPerson(fileName, Var.XLS);
-		// for (CC cc : ccPerson.getCcs()) {
-		// Sheet sheet = wb.getSheetAt(0);
-		// for (int i = 4; i < sheet.getLastRowNum(); i++) {
-		// String date = sheet.getRow(i).getCell(0)
-		// .getStringCellValue();
-		// SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
-		// if (date.contains("-")) {
-		// if (!sdf.parse(date).before(sdf.parse(cc.getStart()))
-		// && !sdf.parse(date).after(
-		// sdf.parse(cc.getEnd()))) {
-		// if (sheet.getRow(i).getCell(3).getStringCellValue()
-		// .equals("旷工")) {
-		// Tools.writeString(wb, i, 3, "出差", true);
-		// }
-		// if (sheet.getRow(i).getCell(4).getStringCellValue()
-		// .equals("旷工")) {
-		// Tools.writeString(wb, i, 4, "出差", true);
-		// }
-		// }
-		// }
-		// }
-		// }
-		// }
+		for (CCPerson ccPerson : ccPersons) {
+			String fileName = ccPerson.getDepartment() + "-"
+					+ ccPerson.getName();
+			System.out.println(fileName);
+			Workbook wb = Tools.openPerson(fileName, Var.XLS);
+			for (CC cc : ccPerson.getCcs()) {
+				Sheet sheet = wb.getSheetAt(0);
+				for (int i = 4; i < sheet.getLastRowNum(); i++) {
+					String date = sheet.getRow(i).getCell(0)
+							.getStringCellValue();
+					SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
+					if (date.contains("-")) {
+						if (!sdf.parse(date).before(sdf.parse(cc.getStart()))
+								&& !sdf.parse(date).after(
+										sdf.parse(cc.getEnd()))) {
+							// System.out.println("flag");
+							if (sheet.getRow(i).getCell(3).getStringCellValue()
+									.equals("旷工")
+									|| sheet.getRow(i).getCell(3)
+											.getStringCellValue().isEmpty()) {
+								Tools.writeString(wb, i, 3, "出差", 2);
+							}
+							if (sheet.getRow(i).getCell(4).getStringCellValue()
+									.equals("旷工")
+									|| sheet.getRow(i).getCell(4)
+											.getStringCellValue().isEmpty()) {
+								Tools.writeString(wb, i, 4, "出差", 2);
+							}
+						}
+					}
+				}
+			}
+			Tools.savePerson(fileName, Var.XLS, wb);
+		}
 
 		for (HolidayPerson holidayPerson : holidayPersons) {
 			String fileName = holidayPerson.getDepartment() + "-"
 					+ holidayPerson.getName();
 			System.out.println(fileName);
 			Workbook wb = Tools.openPerson(fileName, Var.XLS);
+			Sheet sheet = wb.getSheetAt(0);
+			// for (int i = 36; i < sheet.getLastRowNum(); i++) {
+			// if (sheet.getRow(i).getCell(0).getStringCellValue()
+			// .equals("年假：")) {
+			// Tools.writeDouble(wb, i, 1, holidayPerson.getNianjia(),
+			// false);
+			// Tools.writeDouble(wb, i, 4, holidayPerson.getBingjia(),
+			// false);
+			// Tools.writeDouble(wb, i, 7, holidayPerson.getShijia(),
+			// false);
+			// Tools.writeDouble(wb, i, 10, holidayPerson.getTiaoxiu(),
+			// false);
+			// Tools.writeDouble(wb, i, 13, holidayPerson.getQita(), false);
+			// }
+			// }
 			for (Holiday holiday : holidayPerson.getHolidays()) {
-				Sheet sheet = wb.getSheetAt(0);
+				// Sheet sheet = wb.getSheetAt(0);
+				for (int i = 4; i < sheet.getLastRowNum(); i++) {
+					String date = sheet.getRow(i).getCell(0)
+							.getStringCellValue();
+					SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
+					if (date.contains("-")) {
+						if (!sdf.parse(date).before(
+								sdf.parse(holiday.getStart().substring(5, 10)))
+								&& !sdf.parse(date).after(
+										sdf.parse(holiday.getEnd().substring(5,
+												10)))) {
+							// System.out.println("flag");
+							if (sheet.getRow(i).getCell(3).getStringCellValue()
+									.equals("旷工")
+									|| sheet.getRow(i).getCell(3)
+											.getStringCellValue().isEmpty()) {
+								Tools.writeString(wb, i, 3,
+										"请假：" + holiday.getType(), 2);
+							}
+							if (sheet.getRow(i).getCell(4).getStringCellValue()
+									.equals("旷工")
+									|| sheet.getRow(i).getCell(4)
+											.getStringCellValue().isEmpty()) {
+								Tools.writeString(wb, i, 4,
+										"请假：" + holiday.getType(), 2);
+							}
+						}
+					}
+
+				}
 				for (int i = 4; i < sheet.getLastRowNum(); i++) {
 					String date = holiday.getStart().substring(5, 10);
 					if (sheet.getRow(i).getCell(0).getStringCellValue()
@@ -584,8 +707,20 @@ public class Dao {
 					+ addPerson.getName();
 			System.out.println(fileName);
 			Workbook wb = Tools.openPerson(fileName, Var.XLS);
+			Sheet sheet = wb.getSheetAt(0);
+			// for (int i = 36; i < sheet.getLastRowNum(); i++) {
+			// if (sheet.getRow(i).getCell(0).getStringCellValue()
+			// .equals("中班数：")) {
+			// Tools.writeDouble(wb, i, 7, addPerson.getAdd_weekday(),
+			// false);
+			// Tools.writeDouble(wb, i, 10, addPerson.getAdd_weekend(),
+			// false);
+			// Tools.writeDouble(wb, i, 13, addPerson.getAdd_holiday(),
+			// false);
+			// }
+			// }
 			for (Add add : addPerson.getAdds()) {
-				Sheet sheet = wb.getSheetAt(0);
+				// Sheet sheet = wb.getSheetAt(0);
 				for (int i = 4; i < sheet.getLastRowNum(); i++) {
 					String date = add.getStart().substring(5, 10);
 					if (sheet.getRow(i).getCell(0).getStringCellValue()
@@ -602,11 +737,13 @@ public class Dao {
 							break;
 						} else if (!sheet.getRow(i + 1).getCell(0)
 								.getStringCellValue().equals(date)) {
+							System.out.println(sheet.getRow(i).getCell(6)
+									.getStringCellValue());
 							if (sheet.getRow(i).getCell(6).getStringCellValue()
-									.equals(add.getStart())
+									.equals(add.getStart().substring(5))
 									&& sheet.getRow(i).getCell(7)
 											.getStringCellValue()
-											.equals(add.getEnd())) {
+											.equals(add.getEnd().substring(5))) {
 								if (sheet.getRow(i).getCell(5)
 										.getStringCellValue().isEmpty()
 										|| sheet.getRow(i).getCell(5) == null) {
@@ -1447,6 +1584,34 @@ public class Dao {
 			Workbook wb = Tools.openPerson(fileName, Var.XLS);
 			if (wb != null) {
 				Sheet sheet = wb.getSheetAt(0);
+
+				// double weekday = 0;
+				// double weekend = 0;
+				// double holiday = 0;
+				// for (int i = 4; i < sheet.getLastRowNum(); i++) {
+				// Row row = sheet.getRow(i);
+				//
+				// if (row.getCell(8) != null) {
+				// // System.out.println(i);
+				// if (row.getCell(2) != null
+				// && (row.getCell(2).getStringCellValue()
+				// .contains("节") || row.getCell(2)
+				// .getStringCellValue().contains("元旦"))) {
+				// holiday = holiday
+				// + row.getCell(8).getNumericCellValue();
+				// } else if (row.getCell(2) != null
+				// && (row.getCell(2).getStringCellValue()
+				// .equals("休息") || row.getCell(2)
+				// .getStringCellValue().contains("加班"))) {
+				// weekend = weekend
+				// + row.getCell(8).getNumericCellValue();
+				// } else {
+				// weekday = weekday
+				// + row.getCell(8).getNumericCellValue();
+				// }
+				// }
+				// }
+
 				for (int i = 4; i < sheet.getLastRowNum(); i++) {
 					Row row = sheet.getRow(i);
 
@@ -1497,6 +1662,9 @@ public class Dao {
 						Tools.writeString(wb, i, 1,
 								"" + pbPerson.getZhongban(), 3);
 						Tools.writeString(wb, i, 4, "" + pbPerson.getYeban(), 3);
+						// Tools.writeDouble(wb, i, 7, weekday, false);
+						// Tools.writeDouble(wb, i, 10, weekend, false);
+						// Tools.writeDouble(wb, i, 13, holiday, false);
 					}
 				}
 

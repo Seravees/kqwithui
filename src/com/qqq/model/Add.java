@@ -8,6 +8,7 @@ public class Add {
 	String end;
 	String site;
 	String apply;
+	String type;
 	double hours;
 
 	public String getName() {
@@ -74,12 +75,20 @@ public class Add {
 		this.hours = hours;
 	}
 
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
 	@Override
 	public String toString() {
 		return "Add [name=" + name + ", department=" + department + ", date="
 				+ date + ", start=" + start + ", end=" + end + ", site=" + site
-				+ ", apply=" + apply + ", hours=" + hours + "]";
+				+ ", apply=" + apply + ", type=" + type + ", hours=" + hours
+				+ "]";
 	}
 
-	
 }
